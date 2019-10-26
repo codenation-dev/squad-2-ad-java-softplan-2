@@ -1,0 +1,29 @@
+﻿Autenticação: (/auth)
+ autenticação
+ autorização
+ login
+ 
+ Usuário: (/signup)
+ cadastro (/signup/{sucesso | falha})
+ pw reset
+ 
+ Entrada de dados: (/logs) POST
+ entrada log
+ banco de dados
+ 
+ Requisição de dados: GET
+ pesquisa  (/logs/{produção | homologação | dev})
+ detalhamento (./logs/{id})
+ ordenar (/logs/{nivel}/{level | freq})
+ 
+ Manipulação: (/id)
+ arquivamento
+ apagar
+ 
+ ROA
+ resource
+ service
+ model
+ repository
+ util
+ dto
