@@ -4,18 +4,22 @@ import java.sql.Date;
 import java.util.Objects;
 
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.ManyToOne;
 
 @Entity
 public class Log {
 	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 	private String title;
 	private String level;
 	private String detail;
 	private Date createdAt;
 	private String origin;
-	//TODO relacionar tabelas
+	@ManyToOne
 	private User generatedBy;
 	
 	
