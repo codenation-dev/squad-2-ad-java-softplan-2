@@ -1,5 +1,6 @@
 package com.codenation.config;
 
+<<<<<<< HEAD
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import springfox.documentation.builders.PathSelectors;
@@ -19,4 +20,7 @@ public class SwaggerConfig {
             .paths(PathSelectors.any())
             .build();
   }
+=======
+public class SwaggerConfig {
+>>>>>>> feature/web-security-oauth2
 }
