@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.data.domain.Pageable;
 
 import javax.validation.Valid;
+import java.util.List;
 
 
 @RestController
@@ -22,13 +23,18 @@ public class UserResource {
   private UserService userService;
 
   @GetMapping()
-  public Iterable<User> findAll(Pageable pageable){
-    return userService.findAll(pageable);
+  public List<UserDTO> findAll(){
+    return userService.findAll();
+  }
+
+  @GetMapping("/{id}")
+  public UserDTO findById(Long id){
+    return userService.findById(id);
   }
 
   @PostMapping
-  public ResponseEntity<HttpEntity> create(@RequestBody @Valid UserDTO userDTO){
-    userService.save(userDTO);
+  public ResponseEntity<HttpEntity> create(@RequestBody @Valid User user){
+    userService.save(user);
     return ResponseEntity.ok().build();
   }
 }

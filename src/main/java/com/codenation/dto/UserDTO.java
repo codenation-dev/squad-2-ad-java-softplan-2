@@ -1,5 +1,7 @@
 package com.codenation.dto;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+import org.codehaus.jackson.annotate.JsonIgnore;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
@@ -13,6 +15,7 @@ public class UserDTO implements UserDetails {
 
   private String name;
   private String email;
+  @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
   private String password;
 
   @Override
@@ -26,7 +29,7 @@ public class UserDTO implements UserDetails {
 
   @Override
   public String getUsername() {
-    return name;
+    return email;
   }
 
   @Override

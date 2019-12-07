@@ -1,29 +1,73 @@
 package com.codenation.entity;
 
-import java.sql.Date;
+import org.hibernate.annotations.CreationTimestamp;
+
+import java.util.Date;
 import java.util.Objects;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.ManyToOne;
 
 @Entity
 public class Log {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
+
 	private String title;
 	private String level;
 	private String detail;
+
+	@CreationTimestamp
 	private Date createdAt;
+
 	private String origin;
-	@ManyToOne
-	private User generatedBy;
-	
-	
-	
+	private String generatedBy;
+	private String env;
+	private Boolean stored;
+	private Integer freq;
+
+
+	public Log(String title, String level, String detail, Date createdAt, String origin, String generatedBy, String env) {
+		this.title = title;
+		this.level = level;
+		this.detail = detail;
+		this.createdAt = createdAt;
+		this.origin = origin;
+		this.generatedBy = generatedBy;
+		this.env = env;
+		this.stored = false;
+		this.freq = 0;
+	}
+
+	public Log (){}
+
+	public Integer getFreq() {
+		return freq;
+	}
+
+	public void setFreq(Integer freq) {
+		this.freq = freq;
+	}
+
+	public String getEnv() {
+		return env;
+	}
+
+	public void setEnv(String env) {
+		this.env = env;
+	}
+
+	public Boolean getStored() {
+		return stored;
+	}
+
+	public void setStored(Boolean stored) {
+		this.stored = stored;
+	}
+
 	/**
 	 * @return the id
 	 */
@@ -99,13 +143,13 @@ public class Log {
 	/**
 	 * @return the generatedBy
 	 */
-	public User getGeneratedBy() {
+	public String getGeneratedBy() {
 		return generatedBy;
 	}
 	/**
 	 * @param generatedBy the generatedBy to set
 	 */
-	public void setGeneratedBy(User generatedBy) {
+	public void setGeneratedBy(String generatedBy) {
 		this.generatedBy = generatedBy;
 	}
 	@Override
@@ -124,11 +168,25 @@ public class Log {
 			return false;
 		}
 		Log other = (Log) obj;
-		return Objects.equals(createdAt, other.createdAt) && Objects.equals(detail, other.detail)
-				&& Objects.equals(generatedBy, other.generatedBy) && id == other.id
+		return Objects.equals(detail, other.detail)
+				&& Objects.equals(generatedBy, other.generatedBy)
 				&& Objects.equals(level, other.level) && Objects.equals(origin, other.origin)
 				&& Objects.equals(title, other.title);
 	}
-	
 
+	@Override
+	public String toString() {
+		return "Log{" +
+						"id=" + id +
+						", title='" + title + '\'' +
+						", level='" + level + '\'' +
+						", detail='" + detail + '\'' +
+						", createdAt=" + createdAt +
+						", origin='" + origin + '\'' +
+						", generatedBy='" + generatedBy + '\'' +
+						", env='" + env + '\'' +
+						", stored=" + stored +
+						", freq=" + freq +
+						'}';
+	}
 }

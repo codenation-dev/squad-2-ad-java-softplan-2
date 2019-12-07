@@ -4,12 +4,14 @@ import com.codenation.dto.UserDTO;
 import com.codenation.entity.User;
 import com.codenation.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Service
 public class UserService implements UserDetailsService {
@@ -17,18 +19,30 @@ public class UserService implements UserDetailsService {
   @Autowired
   private UserRepository userRepository;
 
-  public Page<User> findAll(Pageable pageable) {return userRepository.findAll(pageable); }
+  public List<UserDTO> findAll() {
+    List<UserDTO> resultSet = new ArrayList<>();
+    for(User U: userRepository.findAll()){
+      resultSet.add(new UserDTO(U.getName(), U.getEmail(), U.getPassword(), U.getAccessLevel()));
+    }
+    return resultSet;
+  }
 
-  public User save(UserDTO userDTO){
-    User user = new User(userDTO.getName(),userDTO.getEmail(),userDTO.getPassword(),userDTO.getAccessLevel());
-    return userRepository.save(user);
+  public UserDTO findById (Long id){
+    User user = userRepository.findById(id).get();
+    return new UserDTO(user.getName(),user.getEmail(), user.getPassword(), user.getAccessLevel());
+  }
+
+  public User save(User user){
+    User result = user;
+    result.setPassword(new BCryptPasswordEncoder().encode(user.getPassword()));
+    return userRepository.save(result);
   }
 
   @Override
   public UserDetails loadUserByUsername(String s) throws UsernameNotFoundException {
-    User user = userRepository.findByName(s);
+    User user = userRepository.findByEmail(s);
     if (user == null) throw new UsernameNotFoundException(s);
 
-    return new UserDTO(user.getName(), user.getEmail(), user.getPassword(), user.getAcessLevel());
+    return new UserDTO(user.getName(), user.getEmail(), "{bcrypt}"+user.getPassword(), user.getAccessLevel());
   }
 }

@@ -1,21 +1,24 @@
 package com.codenation.entity;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
+import javax.validation.constraints.NotNull;
 
 @Entity
 public class User {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-
 	private Long id;
 
 	private String name;
+
+	@NotNull
+	@Column(unique = true)
 	private String email;
+
+	@NotNull
 	private String password;
+
 	private int accessLevel;
 
 	public String getName() {
@@ -30,9 +33,15 @@ public class User {
 		return password;
 	}
 
-	public int getAcessLevel() {
+	public int getAccessLevel() {
 		return accessLevel;
 	}
+
+	public void setPassword(String password){
+		this.password = password;
+	}
+
+	public User (){}
 
 	public User(String name, String email, String password, int accessLevel) {
 		this.name = name;
