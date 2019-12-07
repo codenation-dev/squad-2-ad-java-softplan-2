@@ -10,8 +10,7 @@ import java.util.Collection;
 
 public class UserDTO implements UserDetails {
 
-  @Null
-  private long id;
+  
 
   private String name;
   private String email;

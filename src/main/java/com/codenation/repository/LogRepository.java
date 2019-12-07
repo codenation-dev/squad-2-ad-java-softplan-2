@@ -22,5 +22,9 @@ public interface LogRepository extends PagingAndSortingRepository<Log, Long> {
   Page<Log> findByDetailContainingIgnoreCase(String detail, Pageable pageable);
 
   Page<Log> findByLevelContainingIgnoreCase(String level, Pageable pageable);
+  
+  Page<Log> findByEnvironment(String environment);
+  
+  Page<Log> findByEnvironmentAndLevel(String environment, String level);
 
 }

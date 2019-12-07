@@ -77,4 +77,15 @@ public class LogService {
       logRepository.save(log);
     }
   }
+  
+  public Page<Log> findByEnvironment(String environment) {
+		return logRepository.findByEnvironment(environment);
+	}
+  
+	public Page<Log> findByEnvironmentAndLevel(String environment, String level) {
+		return logRepository.findByEnvironmentAndLevel( environment,  level);
+		// TODO Auto-generated method stub
+		
+	}
+  
 }
