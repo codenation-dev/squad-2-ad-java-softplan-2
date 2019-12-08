@@ -56,8 +56,6 @@ public class AuthorizationServerConfig extends WebSecurityConfigurerAdapter {
             "/webjars/**");
   }
 
-  //TODO JWT integration
-  /*
   @Bean
   public TokenStore tokenStore() {
     return new JwtTokenStore(accessTokenConverter());
@@ -77,6 +75,5 @@ public class AuthorizationServerConfig extends WebSecurityConfigurerAdapter {
     tokenServices.setAuthenticationManager(authenticationManager);
     return tokenServices;
   }
-  */
 
 }

@@ -35,7 +35,7 @@ public class CentralErrosApplication implements CommandLineRunner {
 		User user = new User("Administrador", "email@email.com", "tr4df2g5wp", 3);
 		userService.save(user);
 
-		Log log = new Log("Título", "DEBUG", "Detalhes", new Date(), "127.0.0.1", "NO TOKEN", "DEBUG");
+		Log log = new Log("Título", "DEBUG", "Detalhes", new Date(), "127.0.0.1", "email@email.com", "NO TOKEN", "DEBUG");
 		logService.save(Collections.singletonList(log));
 	}
 

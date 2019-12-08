@@ -5,10 +5,7 @@ import org.hibernate.annotations.CreationTimestamp;
 import java.util.Date;
 import java.util.Objects;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
 
 @Entity
 public class Log {
@@ -24,13 +21,17 @@ public class Log {
 	private Date createdAt;
 
 	private String origin;
+
+	@Column(length = 350)
+	private String token;
+
 	private String generatedBy;
 	private String env;
 	private Boolean stored;
 	private Integer freq;
 
 
-	public Log(String title, String level, String detail, Date createdAt, String origin, String generatedBy, String env) {
+	public Log(String title, String level, String detail, Date createdAt, String origin, String generatedBy, String token, String env) {
 		this.title = title;
 		this.level = level;
 		this.detail = detail;
@@ -38,11 +39,20 @@ public class Log {
 		this.origin = origin;
 		this.generatedBy = generatedBy;
 		this.env = env;
+		this.token = token;
 		this.stored = false;
 		this.freq = 0;
 	}
 
 	public Log (){}
+
+	public String getToken() {
+		return token;
+	}
+
+	public void setToken(String token) {
+		this.token = token;
+	}
 
 	public Integer getFreq() {
 		return freq;

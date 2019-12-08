@@ -16,7 +16,7 @@ public class WebUtils {
     while (headerNames.hasMoreElements()) {
       String key = (String) headerNames.nextElement();
       String value = request.getHeader(key);
-      map.put(key.toLowerCase(), value.toLowerCase());
+      map.put(key, value);
     }
 
     return map;

@@ -32,10 +32,9 @@ public class UserService implements UserDetailsService {
     return new UserDTO(user.getName(),user.getEmail(), user.getPassword(), user.getAccessLevel());
   }
 
-  public User save(User user){
-    User result = user;
-    result.setPassword(new BCryptPasswordEncoder().encode(user.getPassword()));
-    return userRepository.save(result);
+  public void save(User user){
+    user.setPassword(new BCryptPasswordEncoder().encode(user.getPassword()));
+    userRepository.save(user);
   }
 
   @Override
