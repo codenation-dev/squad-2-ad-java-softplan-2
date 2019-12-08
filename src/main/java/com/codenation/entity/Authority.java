@@ -1,12 +1,16 @@
 package com.codenation.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
 
 import javax.persistence.*;
 import java.util.Collection;
 
 @Entity
+@Data
+@NoArgsConstructor
 public class Authority implements GrantedAuthority {
 
     @Id
@@ -29,8 +33,6 @@ public class Authority implements GrantedAuthority {
         this.name = name;
         this.roles = roles;
     }
-
-    public Authority(){}
 
     @Override
     public String getAuthority() {

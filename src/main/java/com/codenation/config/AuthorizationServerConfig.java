@@ -1,5 +1,6 @@
 package com.codenation.config;
 
+import com.codenation.service.CustomUserDetailsService;
 import com.codenation.service.UserService;
 import org.h2.server.web.WebServlet;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,7 +27,7 @@ import org.springframework.security.oauth2.provider.token.store.JwtTokenStore;
 public class AuthorizationServerConfig extends WebSecurityConfigurerAdapter {
 
   @Autowired
-  private UserService userService;
+  private CustomUserDetailsService userService;
 
   @Bean
   @Override
