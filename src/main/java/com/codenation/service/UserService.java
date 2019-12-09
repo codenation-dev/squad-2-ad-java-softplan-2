@@ -12,9 +12,10 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Service
-public class UserService implements UserDetailsService {
+public class UserService {
 
   @Autowired
   private UserRepository userRepository;
@@ -22,26 +23,16 @@ public class UserService implements UserDetailsService {
   public List<UserDTO> findAll() {
     List<UserDTO> resultSet = new ArrayList<>();
     for(User U: userRepository.findAll()){
-      resultSet.add(new UserDTO(U.getName(), U.getEmail(), U.getPassword(), U.getAccessLevel()));
+      resultSet.add(new UserDTO(U.getId(), U.getName(), U.getEmail(), U.getPassword(), U.getAuthorities()));
     }
     return resultSet;
   }
 
-  public UserDTO findById (Long id){
-    User user = userRepository.findById(id).get();
-    return new UserDTO(user.getName(),user.getEmail(), user.getPassword(), user.getAccessLevel());
+  public Optional<User> findById (Long id){
+    return userRepository.findById(id);
   }
 
   public void save(User user){
-    user.setPassword(new BCryptPasswordEncoder().encode(user.getPassword()));
     userRepository.save(user);
-  }
-
-  @Override
-  public UserDetails loadUserByUsername(String s) throws UsernameNotFoundException {
-    User user = userRepository.findByEmail(s);
-    if (user == null) throw new UsernameNotFoundException(s);
-
-    return new UserDTO(user.getName(), user.getEmail(), "{bcrypt}"+user.getPassword(), user.getAccessLevel());
   }
 }

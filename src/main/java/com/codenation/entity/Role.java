@@ -3,9 +3,13 @@ package com.codenation.entity;
 import javax.persistence.*;
 import java.util.Collection;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
 
 @Entity
+@Data
+@NoArgsConstructor
 public class Role implements GrantedAuthority {
 
     @Id
@@ -13,59 +17,27 @@ public class Role implements GrantedAuthority {
     private Long id;
 
     private String name;
+
     @ManyToMany(mappedBy = "roles")
     @JsonIgnore
     private Collection<User> users;
 
-    @ManyToMany
-    @JoinTable(name = "roles_authorities", joinColumns = @JoinColumn(name = "role_id", referencedColumnName = "id"), inverseJoinColumns = @JoinColumn(name = "authority_id", referencedColumnName = "id"))
+    @ManyToMany()
+    @JoinTable(
+            name = "roles_authorities",
+            joinColumns = @JoinColumn(
+                    name = "role_id", referencedColumnName = "id"),
+            inverseJoinColumns = @JoinColumn(
+                    name = "authority_id", referencedColumnName = "id"))
     private Collection<Authority> authorities;
 
-    public Role(Long id, String name, Collection<User> users, Collection<Authority> authorities) {
-        this.id = id;
+    public Role(String name, Collection<Authority> authorities) {
         this.name = name;
-        this.users = users;
         this.authorities = authorities;
     }
 
-    public Role(final String name) {
-        super();
+    public Role(String name) {
         this.name = name;
-    }
-
-    public Role() {
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public Collection<User> getUsers() {
-        return users;
-    }
-
-    public void setUsers(Collection<User> users) {
-        this.users = users;
-    }
-
-    public Collection<Authority> getAuthorities() {
-        return authorities;
-    }
-
-    public void setAuthorities(Collection<Authority> authorities) {
-        this.authorities = authorities;
     }
 
     @Override
