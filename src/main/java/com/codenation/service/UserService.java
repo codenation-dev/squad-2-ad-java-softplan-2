@@ -33,7 +33,6 @@ public class UserService {
   }
 
   public void save(User user){
-    user.setPassword(new BCryptPasswordEncoder().encode(user.getPassword()));
     userRepository.save(user);
   }
 }

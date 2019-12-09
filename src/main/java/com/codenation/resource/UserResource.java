@@ -8,6 +8,7 @@ import com.codenation.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -21,6 +22,8 @@ import java.util.Optional;
 @RequestMapping("/user")
 public class UserResource {
 
+  @Autowired
+  private PasswordEncoder passwordEncoder;
 
   @Autowired
   private UserService userService;
@@ -49,8 +52,15 @@ public class UserResource {
   @PostMapping
   public ResponseEntity<HttpEntity> create(@RequestBody @Valid User user){
     Role role = roleRepository.findByName("USER");
-    user.setRoles(Collections.singletonList(role));
-    userService.save(user);
+
+    User result = new User();
+    result.setRoles(Collections.singletonList(role));
+    result.setName(user.getName());
+    result.setEmail(user.getEmail());
+    result.setPassword(passwordEncoder.encode(user.getPassword()));
+
+    userService.save(result);
+
     return ResponseEntity.ok().build();
   }
 
