@@ -12,7 +12,6 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
@@ -50,14 +49,14 @@ public class UserResource {
   }
 
   @PostMapping
-  public ResponseEntity<HttpEntity> create(@RequestBody @Valid User user){
+  public ResponseEntity<HttpEntity> create(@RequestBody @Valid UserDTO userDTO){
     Role role = roleRepository.findByName("USER");
 
     User result = new User();
     result.setRoles(Collections.singletonList(role));
-    result.setName(user.getName());
-    result.setEmail(user.getEmail());
-    result.setPassword(passwordEncoder.encode(user.getPassword()));
+    result.setName(userDTO.getName());
+    result.setEmail(userDTO.getEmail());
+    result.setPassword(passwordEncoder.encode(userDTO.getPassword()));
 
     userService.save(result);
 

@@ -1,6 +1,5 @@
 package com.codenation.entity;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -9,6 +8,7 @@ import org.springframework.security.core.GrantedAuthority;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
+import java.io.Serializable;
 import java.util.*;
 
 @Entity
@@ -16,7 +16,9 @@ import java.util.*;
 @AllArgsConstructor
 @Builder
 @Data
-public class User {
+public class User implements Serializable {
+
+	private static final long serialVersionUID = 5447349252217756923L;
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -55,7 +57,7 @@ public class User {
 
 	public List<GrantedAuthority> getAuthorities() {
 		List<GrantedAuthority> authorities = new ArrayList();
-		roles.forEach(role -> { authorities.addAll(role.getAuthorities()); });
+		roles.forEach(role -> authorities.addAll(role.getAuthorities()));
 		return authorities;
 	}
 

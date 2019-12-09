@@ -1,26 +1,19 @@
 package com.codenation.dto;
 
-import com.codenation.entity.Authority;
-import com.codenation.entity.Role;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.codehaus.jackson.annotate.JsonIgnore;
 import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
-import javax.persistence.Entity;
 import javax.transaction.Transactional;
 import javax.validation.constraints.Null;
 import java.util.Collection;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
 
 @Builder
+@Data
 @AllArgsConstructor
 @NoArgsConstructor
 @Transactional
@@ -69,10 +62,4 @@ public class UserDTO implements UserDetails {
     return true;
   }
 
-  public UserDTO(Long id, String name, String email, String password) {
-    this.id = id;
-    this.name = name;
-    this.email = email;
-    this.password = password;
-  }
 }

@@ -11,14 +11,10 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.List;
+import java.util.*;
 
 @Service("userDetailsService")
 @Transactional
@@ -37,15 +33,13 @@ public class CustomUserDetailsService implements UserDetailsService {
   private RoleRepository roleRepository;
 
   @Override
-  public UserDetails loadUserByUsername(String email)
-          throws UsernameNotFoundException {
+  public UserDetails loadUserByUsername(String email) {
 
     User user = userRepository.findByEmail(email);
     if (user == null) {
       return new org.springframework.security.core.userdetails.User(
               " ", " ", true, true, true, true,
-              getAuthorities(Arrays.asList(
-                      roleRepository.findByName("ROLE_USER"))));
+              getAuthorities(Collections.singletonList(roleRepository.findByName("ROLE_USER"))));
     }
 
     return new org.springframework.security.core.userdetails.User(
