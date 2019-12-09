@@ -13,7 +13,7 @@ import javax.persistence.Id;
 @Entity
 public class Log {
 	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@GeneratedValue(strategy = GenerationType.AUTO)
 	private Long id;
 
 	private String title;
@@ -25,19 +25,19 @@ public class Log {
 
 	private String origin;
 	private String generatedBy;
-	private String env;
+	private String environment;
 	private Boolean stored;
 	private Integer freq;
 
 
-	public Log(String title, String level, String detail, Date createdAt, String origin, String generatedBy, String env) {
+	public Log(String title, String level, String detail, Date createdAt, String origin, String generatedBy, String environment) {
 		this.title = title;
 		this.level = level;
 		this.detail = detail;
 		this.createdAt = createdAt;
 		this.origin = origin;
 		this.generatedBy = generatedBy;
-		this.env = env;
+		this.environment = environment;
 		this.stored = false;
 		this.freq = 0;
 	}
@@ -52,12 +52,20 @@ public class Log {
 		this.freq = freq;
 	}
 
-	public String getEnv() {
-		return env;
+	
+
+	/**
+	 * @return the environment
+	 */
+	public String getEnvironment() {
+		return environment;
 	}
 
-	public void setEnv(String env) {
-		this.env = env;
+	/**
+	 * @param environment the environment to set
+	 */
+	public void setEnvironment(String environment) {
+		this.environment = environment;
 	}
 
 	public Boolean getStored() {
@@ -184,7 +192,7 @@ public class Log {
 						", createdAt=" + createdAt +
 						", origin='" + origin + '\'' +
 						", generatedBy='" + generatedBy + '\'' +
-						", env='" + env + '\'' +
+						", env='" + environment + '\'' +
 						", stored=" + stored +
 						", freq=" + freq +
 						'}';
