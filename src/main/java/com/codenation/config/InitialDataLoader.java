@@ -69,7 +69,6 @@ public class InitialDataLoader implements
             createUserPrivilege,
             alterUserPrivilege);
 
-    createRoleIfNotFound("ADMIN", adminPrivileges);
 
     createRoleIfNotFound("USER", Collections.singletonList(readPrivilege));
 
@@ -83,10 +82,10 @@ public class InitialDataLoader implements
 
     createRoleIfNotFound("DEV", Arrays.asList(readPrivilege, createUserPrivilege));
 
+    Role adminRole = createRoleIfNotFound("ADMIN", adminPrivileges);
 
-    Role adminRole = roleRepository.findByName("ADMIN");
     User user = new User();
-    user.setName("ADMIN");
+    user.setName("Administrator");
     user.setPassword(passwordEncoder.encode("secret"));
     user.setEmail("admin@admin");
     user.setRoles(Collections.singletonList(adminRole));
@@ -96,7 +95,7 @@ public class InitialDataLoader implements
   }
 
   @Transactional
-  private Authority createPrivilegeIfNotFound(String name) {
+  public Authority createPrivilegeIfNotFound(String name) {
 
     Authority authority = authorityRepository.findByName(name);
     if (authority == null) {
@@ -107,7 +106,7 @@ public class InitialDataLoader implements
   }
 
   @Transactional
-  private Role createRoleIfNotFound(
+  public Role createRoleIfNotFound(
           String name, Collection<Authority> privileges) {
 
     Role role = roleRepository.findByName(name);

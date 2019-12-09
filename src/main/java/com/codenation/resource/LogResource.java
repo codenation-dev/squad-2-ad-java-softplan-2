@@ -4,7 +4,6 @@ import com.codenation.entity.Log;
 import com.codenation.service.LogService;
 import com.codenation.utils.JWTParser;
 import com.codenation.utils.WebUtils;
-import io.jsonwebtoken.Claims;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -62,7 +61,6 @@ public class LogResource {
     Map<String, String> headers = new WebUtils().getHeadersInfo(req);
 
     String jwt = headers.getOrDefault("authorization".toLowerCase(), "NO TOKEN");
-    System.out.println(jwt);
 
     if(!jwt.equals("NO TOKEN")) {jwt = jwt.substring(7);}
 
@@ -73,7 +71,11 @@ public class LogResource {
 
     List<Log> result = new ArrayList<>();
     for(Log log: logs) {
-      result.add(new Log(log.getTitle(), log.getLevel(), log.getDetail(), new Date(), req.getRemoteAddr(), email, token, log.getEnv()));
+      log.setCreatedAt(new Date());
+      log.setOrigin(req.getRemoteAddr());
+      log.setGeneratedBy(email);
+      log.setToken(token);
+      result.add(log);
     }
 
     logService.save(result);
