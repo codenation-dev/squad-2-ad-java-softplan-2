@@ -88,7 +88,8 @@ public class LogResource {
 
     for(Long id: ids){
       Optional<Log> tmp = logService.findById(id);
-      tmp.ifPresent(log -> {log.setStored(!log.getStored()); result.add(log);
+      tmp.ifPresent(log -> {
+        log.setStored(!log.getStored()); result.add(log);
       });
     }
       logService.save(result);
