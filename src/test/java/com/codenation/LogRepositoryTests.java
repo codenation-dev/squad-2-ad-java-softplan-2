@@ -52,13 +52,6 @@ public class LogRepositoryTests {
 
 
     @Test
-    void contextLoads() {
-        User user = new User();
-        assertNotEquals(null, user.getId(), "Id não deve ser nulo");
-
-    }
-
-    @Test
     void salvarLog() {
 
         populateDataBase();
