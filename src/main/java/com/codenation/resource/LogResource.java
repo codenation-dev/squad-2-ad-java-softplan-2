@@ -2,6 +2,7 @@ package com.codenation.resource;
 
 import com.codenation.entity.Log;
 import com.codenation.service.LogService;
+import com.codenation.utils.JWTParser;
 import com.codenation.utils.WebUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -42,13 +43,22 @@ public class LogResource {
   public ResponseEntity<HttpEntity> create(@RequestBody @Valid List<Log> logs, HttpServletRequest req){
     Map<String, String> headers = new WebUtils().getHeadersInfo(req);
 
-    String token = headers.getOrDefault("authorization".toLowerCase(), "NO TOKEN");
+    String jwt = headers.getOrDefault("authorization".toLowerCase(), "NO TOKEN");
 
-    if(!token.equals("NO TOKEN")) {token = token.substring(7);}
+    if(!jwt.equals("NO TOKEN")) {jwt = jwt.substring(7);}
+
+    Map<String, Object> jwtMap = new JWTParser().parseToken(jwt);
+
+    String email = (String) jwtMap.getOrDefault("user_name", "NO EMAIL SET");
+    String token = (String) jwtMap.getOrDefault("jti", "NO TOKEN SET");
 
     List<Log> result = new ArrayList<>();
     for(Log log: logs) {
-      result.add(new Log(log.getTitle(), log.getLevel(), log.getDetail(), new Date(), req.getRemoteAddr(), token, log.getEnvironment()));
+      log.setCreatedAt(new Date());
+      log.setOrigin(req.getRemoteAddr());
+      log.setGeneratedBy(email);
+      log.setToken(token);
+      result.add(log);
     }
 
     logService.save(result);
@@ -56,7 +66,7 @@ public class LogResource {
   }
 
   @PatchMapping("/store/{ids}")
-  public ResponseEntity<HttpEntity> patchAll(@PathVariable List<Long> ids){ //store?ids=1,2,3,4
+  public ResponseEntity<HttpEntity> patchAll(@PathVariable List<Long> ids){
     List<Log> result = new ArrayList<>();
 
     for(Long id: ids){

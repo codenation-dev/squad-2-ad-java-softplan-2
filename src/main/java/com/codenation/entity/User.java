@@ -1,11 +1,25 @@
 package com.codenation.entity;
 
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+import org.springframework.security.core.GrantedAuthority;
+
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
+import java.io.Serializable;
+import java.util.*;
 
 @Entity
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
+@Data
 @Table(name="application_user")
-public class User {
+public class User implements Serializable {
+
+	private static final long serialVersionUID = 5447349252217756923L;
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
@@ -20,34 +34,33 @@ public class User {
 	@NotNull
 	private String password;
 
-	private int accessLevel;
+	@ManyToMany(cascade = CascadeType.PERSIST)
+	@JoinTable(
+					name = "users_roles",
+					joinColumns = @JoinColumn(
+									name = "user_id", referencedColumnName = "id"),
+					inverseJoinColumns = @JoinColumn(
+									name = "role_id", referencedColumnName = "id"))
+	private Collection<Role> roles;
 
-	public String getName() {
-		return name;
-	}
-
-	public String getEmail() {
-		return email;
-	}
-
-	public String getPassword() {
-		return password;
-	}
-
-	public int getAccessLevel() {
-		return accessLevel;
-	}
-
-	public void setPassword(String password){
-		this.password = password;
-	}
-
-	public User (){}
-
-	public User(String name, String email, String password, int accessLevel) {
+	public User(String name, String email, String password, Collection<Role> roles) {
 		this.name = name;
 		this.email = email;
 		this.password = password;
-		this.accessLevel = accessLevel;
+		this.roles = roles;
 	}
+
+	public User(String name, String email, String password) {
+		this.name = name;
+		this.email = email;
+		this.password = password;
+	}
+
+	public List<GrantedAuthority> getAuthorities() {
+		List<GrantedAuthority> authorities = new ArrayList();
+		roles.forEach(role -> authorities.addAll(role.getAuthorities()));
+		return authorities;
+	}
+
+
 }

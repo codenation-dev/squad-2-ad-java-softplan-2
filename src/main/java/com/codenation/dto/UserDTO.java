@@ -1,25 +1,37 @@
 package com.codenation.dto;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import org.codehaus.jackson.annotate.JsonIgnore;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
+import javax.transaction.Transactional;
 import javax.validation.constraints.Null;
 import java.util.Collection;
 
+@Builder
+@Data
+@AllArgsConstructor
+@NoArgsConstructor
+@Transactional
 public class UserDTO implements UserDetails {
 
-  
+
+  @Null
+  private Long id;
 
   private String name;
   private String email;
   @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
   private String password;
+  private Collection<GrantedAuthority> authorities;
 
   @Override
-  public Collection<? extends GrantedAuthority> getAuthorities() {
-    return null;
+  public Collection<GrantedAuthority> getAuthorities() {
+      return this.authorities;
   }
 
   public String getPassword() {
@@ -51,44 +63,4 @@ public class UserDTO implements UserDetails {
     return true;
   }
 
-  public UserDTO setPassword(String password) {
-    this.password = password;
-    return this;
-  }
-
-  private int accessLevel;
-
-  public String getName() {
-    return name;
-  }
-
-  public UserDTO setName(String name) {
-    this.name = name;
-    return this;
-  }
-
-  public String getEmail() {
-    return email;
-  }
-
-  public UserDTO setEmail(String email) {
-    this.email = email;
-    return this;
-  }
-
-  public int getAccessLevel() {
-    return accessLevel;
-  }
-
-  public UserDTO setAccessLevel(int accessLevel) {
-    this.accessLevel = accessLevel;
-    return this;
-  }
-
-  public UserDTO(String name, String email, String password, int accessLevel) {
-    this.name = name;
-    this.email = email;
-    this.password = password;
-    this.accessLevel = accessLevel;
-  }
 }
