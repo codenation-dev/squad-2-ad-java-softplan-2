@@ -78,11 +78,11 @@ public class LogService {
     }
   }
   
-  public Page<Log> findByEnvironment(String environment) {
+  public List<Log> findByEnvironment(String environment) {
 		return logRepository.findByEnvironment(environment);
 	}
   
-	public Page<Log> findByEnvironmentAndLevel(String environment, String level) {
+	public List<Log> findByEnvironmentAndLevel(String environment, String level) {
 		return logRepository.findByEnvironmentAndLevel( environment,  level);
 		// TODO Auto-generated method stub
 		

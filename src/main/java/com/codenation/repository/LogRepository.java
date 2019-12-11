@@ -9,6 +9,7 @@ import org.springframework.data.repository.PagingAndSortingRepository;
 import com.codenation.entity.Log;
 import org.springframework.data.repository.query.Param;
 
+import java.util.List;
 import java.util.Optional;
 
 public interface LogRepository extends PagingAndSortingRepository<Log, Long> {
@@ -23,8 +24,7 @@ public interface LogRepository extends PagingAndSortingRepository<Log, Long> {
 
   Page<Log> findByLevelContainingIgnoreCase(String level, Pageable pageable);
   
-  Page<Log> findByEnvironment(String environment);
-  
-  Page<Log> findByEnvironmentAndLevel(String environment, String level);
+  List<Log> findByEnvironment(String environment);
 
-}
+  List<Log> findByEnvironmentAndLevel(String environment, String level);
+  }

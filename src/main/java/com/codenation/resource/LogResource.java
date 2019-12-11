@@ -27,8 +27,8 @@ public class LogResource {
     return logService.findById(id);
   }
 
-  @GetMapping("/logs/{environment}")
-	public Page<Log> 
+  @GetMapping("/{environment}")
+	public List<Log> 
 	findByEnvironment(@PathVariable String environment, @RequestParam(required = false) String level) {
 		if(level != null) {
 			return logService.findByEnvironmentAndLevel(environment,level);
@@ -48,7 +48,7 @@ public class LogResource {
 
     List<Log> result = new ArrayList<>();
     for(Log log: logs) {
-      result.add(new Log(log.getTitle(), log.getLevel(), log.getDetail(), new Date(), req.getRemoteAddr(), token, log.getEnv()));
+      result.add(new Log(log.getTitle(), log.getLevel(), log.getDetail(), new Date(), req.getRemoteAddr(), token, log.getEnvironment()));
     }
 
     logService.save(result);
