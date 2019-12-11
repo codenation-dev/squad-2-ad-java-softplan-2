@@ -8,6 +8,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -27,24 +29,37 @@ public class LogResource {
     return logService.findAll(pageable);
   }
 
-  @GetMapping("/{environment}")
-	public Page<Log> findByEnv(@PathVariable String environment, @RequestParam(required = false) String level, Pageable pageable) {
+  @GetMapping("/{env}")
+	public Page<Log> findByEnv(@PathVariable String env, @RequestParam(required = false) String level, Pageable pageable) {
 		if(level != null) {
-			return logService.findByEnvAndLevel(environment,level, pageable);
+			return logService.findByEnvAndLevel(env,level, pageable);
 		}
-		return logService.findByEnv(environment, pageable);
+		return logService.findByEnv(env, pageable);
 	}
 
-  @GetMapping("/{environment}/{id}")
-  public Optional<Log> findById(@PathVariable Long id) {
-    return logService.findById(id);
+  @GetMapping("/{env}/{id}")
+  public Optional<Log> findById(
+          @PathVariable String env,
+          @PathVariable Long id) {
+    return logService.findByIdAndEnv(id, env);
   }
-  
+
+  @GetMapping("/{env}/search")
+  public Page<Log> searchByOriginOrLevel(
+          @PathVariable String env,
+          @RequestParam(required = false) String origin,
+          @RequestParam(required = false) String level,
+          Pageable pageable) {
+
+    return logService.findByOriginOrLevel(origin, level, env, pageable);
+  }
 
 
   @PostMapping
-  public ResponseEntity<HttpEntity> create(@RequestBody @Valid List<Log> logs, HttpServletRequest req){
+  public ResponseEntity<String> create(@RequestBody @Valid List<Log> logs, HttpServletRequest req){
     Map<String, String> headers = new WebUtils().getHeadersInfo(req);
+    StringBuilder msg = new StringBuilder("Some logs were not added: IDS ");
+    List<Long> excluded = new ArrayList<>();
 
     String jwt = headers.getOrDefault("authorization".toLowerCase(), "NO TOKEN");
 
@@ -57,6 +72,10 @@ public class LogResource {
 
     List<Log> result = new ArrayList<>();
     for(Log log: logs) {
+      if (log.getTitle().isEmpty() || log.getDetail().isEmpty()) {
+        excluded.add(log.getId());
+        continue;
+      }
       log.setCreatedAt(new Date());
       log.setOrigin(req.getRemoteAddr());
       log.setGeneratedBy(email);
@@ -65,7 +84,11 @@ public class LogResource {
     }
 
     logService.save(result);
-    return ResponseEntity.ok().build();
+
+    return new ResponseEntity<>(
+            excluded.size() > 0 ? msg.toString() + excluded.toString() : "",
+            HttpStatus.OK
+    );
   }
 
   @PatchMapping("/store/{ids}")

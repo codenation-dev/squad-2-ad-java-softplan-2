@@ -1,5 +1,7 @@
 package com.codenation.entity;
 
+import com.codenation.enums.Env;
+import com.codenation.enums.Level;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -25,9 +27,10 @@ public class Log {
 	private String title;
 
 	@Column(nullable = false)
-	private String level;
+	@Enumerated(EnumType.STRING)
+	private Level level;
 
-	@Column(nullable = false)
+	@Column(nullable = false, columnDefinition="TEXT")
 	private String detail;
 
 	@CreationTimestamp
@@ -36,16 +39,15 @@ public class Log {
 	@Column(nullable = false)
 	private String origin;
 
-
 	@Column(length = 350)
 	private String token;
 
 	@Column(nullable = false)
 	private String generatedBy;
 
-
 	@Column(nullable = false)
-	private String env;
+	@Enumerated(EnumType.STRING)
+	private Env env;
 
 	private Boolean stored = false;
 	private Integer freq = 0;

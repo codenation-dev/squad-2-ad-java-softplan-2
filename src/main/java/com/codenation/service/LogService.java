@@ -30,6 +30,10 @@ public class LogService {
     return logRepository.findById(id);
   }
 
+  public Optional<Log> findByIdAndEnv(Long id, String env) {
+    return logRepository.findByStoredAndIdAndEnv(false, id, env);
+  }
+
   public long count() {
     return logRepository.count();
   }
@@ -40,7 +44,7 @@ public class LogService {
   }
 
   public Page<Log> findByOrigin(String origin, Pageable pageable) {
-    Page<Log> result = logRepository.findByOriginContainingIgnoreCase(origin, pageable);
+    Page<Log> result = logRepository.findByStoredAndOriginContainingIgnoreCase(false, origin, pageable);
 
     for(Log log: result.getContent()){
       log.setFreq(Collections.frequency(result.getContent(), log));
@@ -49,7 +53,7 @@ public class LogService {
   }
 
   public Page<Log> findByDetail(String detail, Pageable pageable) {
-    Page<Log> result = logRepository.findByDetailContainingIgnoreCase(detail, pageable);
+    Page<Log> result = logRepository.findByStoredAndDetailContainingIgnoreCase(false, detail, pageable);
 
     for(Log log: result.getContent()){
       log.setFreq(Collections.frequency(result.getContent(), log));
@@ -58,7 +62,7 @@ public class LogService {
   }
 
   public Page<Log> findByLevel(String level, Pageable pageable) {
-    Page<Log> result = logRepository.findByLevelContainingIgnoreCase(level, pageable);
+    Page<Log> result = logRepository.findByStoredAndLevelContainingIgnoreCase(false,  level, pageable);
 
     for(Log log: result.getContent()){
       log.setFreq(Collections.frequency(result.getContent(), log));
@@ -74,12 +78,16 @@ public class LogService {
   }
   
   public Page<Log> findByEnv(String environment, Pageable pageable) {
-		return logRepository.findByEnvIgnoreCase(environment, pageable);
+		return logRepository.findByStoredAndEnvIgnoreCase(false, environment, pageable);
 	}
   
 	public Page<Log> findByEnvAndLevel(String environment, String level,  Pageable pageable) {
-		return logRepository.findByEnvAndLevelIgnoreCase(environment, level, pageable);
+		return logRepository.findByStoredAndEnvAndLevelIgnoreCase(false, environment, level, pageable);
 	}
+
+  public Page<Log> findByOriginOrLevel(String origin, String level, String env, Pageable pageable) {
+    return logRepository.findByStoredAndEnvAndOriginOrLevelIgnoreCase(false, origin, level, env, pageable);
+  }
 
   
 }
