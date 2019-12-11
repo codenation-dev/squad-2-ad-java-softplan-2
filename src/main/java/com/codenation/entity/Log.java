@@ -1,5 +1,6 @@
 package com.codenation.entity;
 
+import com.codenation.dto.UserDTO;
 import com.codenation.enums.Env;
 import com.codenation.enums.Level;
 import lombok.AllArgsConstructor;
@@ -8,6 +9,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.CreationTimestamp;
 
+import java.util.Collection;
 import java.util.Date;
 import java.util.Objects;
 

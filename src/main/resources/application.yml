@@ -10,7 +10,9 @@ spring:
     username: ryspeuph
     password: 4WI0bvvpLj9n3_JGut8jJObdhD2P3MX3
   jpa.hibernate.ddl-auto: create
-  
+
+
+spring.mvc.dispatch-options-request: true
 
 security.oauth2.client:
   client-id: "squad2"

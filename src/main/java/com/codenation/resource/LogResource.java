@@ -8,7 +8,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -58,8 +57,7 @@ public class LogResource {
   @PostMapping
   public ResponseEntity<String> create(@RequestBody @Valid List<Log> logs, HttpServletRequest req){
     Map<String, String> headers = new WebUtils().getHeadersInfo(req);
-    StringBuilder msg = new StringBuilder("Some logs were not added: IDS ");
-    List<Long> excluded = new ArrayList<>();
+    List<Log> excluded = new ArrayList<>();
 
     String jwt = headers.getOrDefault("authorization".toLowerCase(), "NO TOKEN");
 
@@ -72,8 +70,9 @@ public class LogResource {
 
     List<Log> result = new ArrayList<>();
     for(Log log: logs) {
+
       if (log.getTitle().isEmpty() || log.getDetail().isEmpty()) {
-        excluded.add(log.getId());
+        excluded.add(log);
         continue;
       }
       log.setCreatedAt(new Date());
@@ -86,7 +85,7 @@ public class LogResource {
     logService.save(result);
 
     return new ResponseEntity<>(
-            excluded.size() > 0 ? msg.toString() + excluded.toString() : "",
+            excluded.size() > 0 ? "{\"notice\":\"Some logs were not added: " + excluded.toString() + "\"}" : "",
             HttpStatus.OK
     );
   }

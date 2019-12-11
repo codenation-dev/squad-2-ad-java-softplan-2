@@ -16,6 +16,10 @@ public class UserService {
   @Autowired
   private UserRepository userRepository;
 
+  public User findByEmail(String email){
+    return userRepository.findByEmail(email);
+  }
+
   public List<UserDTO> findAll() {
     List<UserDTO> resultSet = new ArrayList<>();
     for(User U: userRepository.findAll()){

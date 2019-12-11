@@ -39,7 +39,7 @@ public class CustomUserDetailsService implements UserDetailsService {
     if (user == null) {
       return new org.springframework.security.core.userdetails.User(
               " ", " ", true, true, true, true,
-              getAuthorities(Collections.singletonList(roleRepository.findByName("ROLE_USER"))));
+              getAuthorities(Collections.singletonList(roleRepository.findByName("READ"))));
     }
 
     return new org.springframework.security.core.userdetails.User(
