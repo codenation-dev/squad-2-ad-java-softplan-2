@@ -74,11 +74,11 @@ public class LogService {
   }
   
   public Page<Log> findByEnv(String environment, Pageable pageable) {
-		return logRepository.findByEnv(environment, pageable);
+		return logRepository.findByEnvIgnoreCase(environment, pageable);
 	}
   
 	public Page<Log> findByEnvAndLevel(String environment, String level,  Pageable pageable) {
-		return logRepository.findByEnvAndLevel(environment, level, pageable);
+		return logRepository.findByEnvAndLevelIgnoreCase(environment, level, pageable);
 	}
 
   
