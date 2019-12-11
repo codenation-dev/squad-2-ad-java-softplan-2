@@ -18,7 +18,7 @@ import javax.persistence.*;
 @Builder
 public class Log {
 	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@GeneratedValue(strategy = GenerationType.AUTO)
 	private Long id;
 
 	@Column(nullable = false)
@@ -36,11 +36,13 @@ public class Log {
 	@Column(nullable = false)
 	private String origin;
 
+
 	@Column(length = 350)
 	private String token;
 
 	@Column(nullable = false)
 	private String generatedBy;
+
 
 	@Column(nullable = false)
 	private String env;
@@ -66,8 +68,8 @@ public class Log {
 				&& Objects.equals(title, other.title);
 	}
 
-	@Override
 	public int hashCode() {
 		return Objects.hash(id, title, level, detail, createdAt, origin, token, generatedBy, env, stored, freq);
+
 	}
 }

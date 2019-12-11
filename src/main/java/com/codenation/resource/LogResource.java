@@ -17,7 +17,7 @@ import javax.validation.Valid;
 import java.util.*;
 
 @RestController
-@RequestMapping("/log")
+@RequestMapping("api/v1/log")
 public class LogResource {
 
   @Autowired
@@ -28,32 +28,15 @@ public class LogResource {
     return logService.findById(id);
   }
 
-  @GetMapping()
-  public Page<Log> findAll(@RequestParam(required = false) String search,
-                           @RequestParam(required = false) String field,
-                           Pageable pageable)
-  {
-
-    Page<Log> result = logService.findAll(pageable);
-
-    if (!StringUtils.isEmpty(search) && !StringUtils.isEmpty(field)){
-      switch (field.toLowerCase()){
-        case "level":
-          result = logService.findByLevel(search, pageable);
-          break;
-        case "detail":
-          result =  logService.findByDetail(search, pageable);
-          break;
-        case "origin":
-          result =  logService.findByOrigin(search, pageable);
-          break;
-        default:
-          result =  logService.findAll(pageable);
-          break;
-      }
-    }
-    return result;
-  }
+  @GetMapping("/{environment}")
+	public List<Log> 
+	findByEnvironment(@PathVariable String environment, @RequestParam(required = false) String level) {
+		if(level != null) {
+			return logService.findByEnvironmentAndLevel(environment,level);
+		}
+		return logService.findByEnvironment(environment);
+	}
+  
 
 
   @PostMapping

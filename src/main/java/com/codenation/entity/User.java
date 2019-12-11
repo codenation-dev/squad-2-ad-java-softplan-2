@@ -16,12 +16,13 @@ import java.util.*;
 @AllArgsConstructor
 @Builder
 @Data
+@Table(name="application_user")
 public class User implements Serializable {
 
 	private static final long serialVersionUID = 5447349252217756923L;
 
 	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@GeneratedValue(strategy = GenerationType.AUTO)
 	private Long id;
 
 	private String name;

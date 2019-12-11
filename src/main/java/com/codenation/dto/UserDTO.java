@@ -19,6 +19,7 @@ import java.util.Collection;
 @Transactional
 public class UserDTO implements UserDetails {
 
+
   @Null
   private Long id;
 
