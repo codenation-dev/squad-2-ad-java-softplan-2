@@ -23,14 +23,14 @@ public class ResourceServerConfig extends ResourceServerConfigurerAdapter {
             .antMatchers("/swagger-ui.html").permitAll()
             .antMatchers("/oauth/token").permitAll()
             .antMatchers(HttpMethod.OPTIONS).permitAll()
-            .antMatchers(HttpMethod.POST,"/user/**").hasAnyAuthority("CREATE_USER")
-            .antMatchers(HttpMethod.PATCH,"/user/**").hasAnyAuthority("ALTER_USER")
-            .antMatchers(HttpMethod.POST,"/log/**").hasAnyAuthority("WRITE")
-            .antMatchers(HttpMethod.GET,"/log/**").hasAnyAuthority("READ")
-            .antMatchers(HttpMethod.PATCH,"/log/**").hasAnyAuthority("STORE")
-            .antMatchers("/log/dev/**").hasAnyAuthority("DEVELOP")
-            .antMatchers("/log/stage/**").hasAnyAuthority("STAGE")
-            .antMatchers("/log/production/**").hasAnyAuthority("PRODUCTION")
+            .antMatchers(HttpMethod.POST,"/api/v1/user/**").hasAnyAuthority("CREATE_USER")
+            .antMatchers(HttpMethod.PATCH,"/api/v1/user/**").hasAnyAuthority("ALTER_USER")
+            .antMatchers(HttpMethod.POST,"/api/v1/log/**").hasAnyAuthority("WRITE")
+            .antMatchers(HttpMethod.GET,"/api/v1/log/**").hasAnyAuthority("READ")
+            .antMatchers(HttpMethod.PATCH,"/api/v1/log/**").hasAnyAuthority("STORE")
+            .antMatchers("/api/v1/log/dev/**").hasAnyAuthority("DEVELOP")
+            .antMatchers("/api/v1/log/stage/**").hasAnyAuthority("STAGE")
+            .antMatchers("/api/v1/log/production/**").hasAnyAuthority("PRODUCTION")
             .anyRequest().authenticated();
     http.cors().and().csrf().disable();
     http.headers().frameOptions().disable();

@@ -87,7 +87,7 @@ public class InitialDataLoader implements
     User user = new User();
     user.setName("Administrator");
     user.setPassword(passwordEncoder.encode("secret"));
-    user.setEmail("admin@admin");
+    user.setEmail("admin@admin.com");
     user.setRoles(Collections.singletonList(adminRole));
     userRepository.save(user);
 

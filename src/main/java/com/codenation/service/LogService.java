@@ -73,14 +73,13 @@ public class LogService {
     }
   }
   
-  public List<Log> findByEnvironment(String environment) {
-		return logRepository.findByEnvironment(environment);
+  public Page<Log> findByEnv(String environment, Pageable pageable) {
+		return logRepository.findByEnv(environment, pageable);
 	}
   
-	public List<Log> findByEnvironmentAndLevel(String environment, String level) {
-		return logRepository.findByEnvironmentAndLevel( environment,  level);
-		// TODO Auto-generated method stub
-		
+	public Page<Log> findByEnvAndLevel(String environment, String level,  Pageable pageable) {
+		return logRepository.findByEnvAndLevel(environment, level, pageable);
 	}
+
   
 }

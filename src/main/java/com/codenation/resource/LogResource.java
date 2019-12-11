@@ -9,7 +9,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.ResponseEntity;
-import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
@@ -23,19 +22,23 @@ public class LogResource {
   @Autowired
   private LogService logService;
 
-  @GetMapping("/{id}")
-  public Optional<Log> findById(@PathVariable Long id){
-    return logService.findById(id);
+  @GetMapping
+  public Page<Log> findAll(Pageable pageable) {
+    return logService.findAll(pageable);
   }
 
   @GetMapping("/{environment}")
-	public List<Log> 
-	findByEnvironment(@PathVariable String environment, @RequestParam(required = false) String level) {
+	public Page<Log> findByEnv(@PathVariable String environment, @RequestParam(required = false) String level, Pageable pageable) {
 		if(level != null) {
-			return logService.findByEnvironmentAndLevel(environment,level);
+			return logService.findByEnvAndLevel(environment,level, pageable);
 		}
-		return logService.findByEnvironment(environment);
+		return logService.findByEnv(environment, pageable);
 	}
+
+  @GetMapping("/{environment}/{id}")
+  public Optional<Log> findById(@PathVariable Long id) {
+    return logService.findById(id);
+  }
   
 
 
