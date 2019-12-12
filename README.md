@@ -32,7 +32,7 @@ O formato de dados para usuário é:
 	"detail": "Detalhes do erro (Stack)",
 	"level": "Nível do erro (DEBUG, WARNING, ERROR)",
 	"origin": "Origem do erro (IP)",
-	"env": "Ambiente de desenvolvimento (DEVELOP, RELEASE, PRODUCTION)",
+	"environment": "Ambiente de desenvolvimento (DEVELOP, RELEASE, PRODUCTION)",
 	"createdAt": "Data de recolhimento",
 	"generatedBy": "Quem o reportou",
 	"stored": "Armazenado "

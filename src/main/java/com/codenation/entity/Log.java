@@ -1,7 +1,6 @@
 package com.codenation.entity;
 
-import com.codenation.dto.UserDTO;
-import com.codenation.enums.Env;
+import com.codenation.enums.Environment;
 import com.codenation.enums.Level;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -9,7 +8,6 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.CreationTimestamp;
 
-import java.util.Collection;
 import java.util.Date;
 import java.util.Objects;
 
@@ -49,10 +47,10 @@ public class Log {
 
 	@Column(nullable = false)
 	@Enumerated(EnumType.STRING)
-	private Env env;
+	private Environment environment;
 
 	private Boolean stored = false;
-	private Integer freq = 0;
+	private Integer events = 0;
 
 	@Override
 	public boolean equals(Object obj) {
@@ -73,7 +71,7 @@ public class Log {
 	}
 
 	public int hashCode() {
-		return Objects.hash(id, title, level, detail, createdAt, origin, token, generatedBy, env, stored, freq);
+		return Objects.hash(id, title, level, detail, createdAt, origin, token, generatedBy, environment, stored, events);
 
 	}
 }

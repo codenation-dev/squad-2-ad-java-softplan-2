@@ -1,7 +1,7 @@
 package com.codenation.enums;
 
-public enum Env {
-  DEV,
+public enum Environment {
+  DEVELOPMENT,
   STAGE,
   PRODUCTION
 }
