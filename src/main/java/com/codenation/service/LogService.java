@@ -30,8 +30,8 @@ public class LogService {
     return logRepository.findById(id);
   }
 
-  public Optional<Log> findByIdAndEnv(Long id, String environment) {
-    return logRepository.findByStoredAndIdAndEnv(false, id, environment);
+  public Optional<Log> findByIdAndEnvironment(Long id, String environment) {
+    return logRepository.findByStoredAndIdAndEnvironment(false, id, environment);
   }
 
   public void deleteById(Long aLong) {
@@ -72,16 +72,16 @@ public class LogService {
     }
   }
   
-  public Page<Log> findByEnv(String environment, Pageable pageable) {
-		return logRepository.findByStoredAndEnvIgnoreCase(false, environment, pageable);
+  public Page<Log> findByEnvironment(String environment, Pageable pageable) {
+		return logRepository.findByStoredAndEnvironmentIgnoreCase(false, environment, pageable);
 	}
   
-	public Page<Log> findByEnvAndLevel(String environment, String level,  Pageable pageable) {
-		return logRepository.findByStoredAndEnvAndLevelIgnoreCase(false, environment, level, pageable);
+	public Page<Log> findByEnvironmentAndLevel(String environment, String level, Pageable pageable) {
+		return logRepository.findByStoredAndEnvironmentAndLevelIgnoreCase(false, environment, level, pageable);
 	}
 
   public Page<Log> findByOriginOrLevel(String origin, String level, String environment, Pageable pageable) {
-    return logRepository.findByStoredAndEnvAndOriginOrLevelIgnoreCase(false, origin, level, environment, pageable);
+    return logRepository.findByStoredAndEnvironmentAndOriginOrLevelIgnoreCase(false, origin, level, environment, pageable);
   }
 
   

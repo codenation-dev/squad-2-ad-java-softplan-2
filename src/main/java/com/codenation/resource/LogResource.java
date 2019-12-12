@@ -28,36 +28,35 @@ public class LogResource {
     return logService.findAll(pageable);
   }
 
-  @GetMapping("/{env}")
-	public Page<Log> findByEnv(@PathVariable String env, @RequestParam(required = false) String level, Pageable pageable) {
+  @GetMapping("/{environment}")
+	public Page<Log> findByEnvironment(@PathVariable String environment, @RequestParam(required = false) String level, Pageable pageable) {
 		if(level != null) {
-			return logService.findByEnvAndLevel(env,level, pageable);
+			return logService.findByEnvironmentAndLevel(environment,level, pageable);
 		}
-		return logService.findByEnv(env, pageable);
+		return logService.findByEnvironment(environment, pageable);
 	}
 
-  @GetMapping("/{env}/{id}")
+  @GetMapping("/{environment}/{id}")
   public Optional<Log> findById(
-          @PathVariable String env,
+          @PathVariable String environment,
           @PathVariable Long id) {
-    return logService.findByIdAndEnv(id, env);
+    return logService.findByIdAndEnvironment(id, environment);
   }
 
-  @GetMapping("/{env}/search")
+  @GetMapping("/{environment}/search")
   public Page<Log> searchByOriginOrLevel(
-          @PathVariable String env,
+          @PathVariable String environment,
           @RequestParam(required = false) String origin,
           @RequestParam(required = false) String level,
           Pageable pageable) {
 
-    return logService.findByOriginOrLevel(origin, level, env, pageable);
+    return logService.findByOriginOrLevel(origin, level, environment, pageable);
   }
 
 
   @PostMapping
-  public ResponseEntity<String> create(@RequestBody @Valid List<Log> logs, HttpServletRequest req){
+  public ResponseEntity<HttpEntity> create(@RequestBody @Valid List<Log> logs, HttpServletRequest req){
     Map<String, String> headers = new WebUtils().getHeadersInfo(req);
-    List<Log> excluded = new ArrayList<>();
 
     String jwt = headers.getOrDefault("authorization".toLowerCase(), "NO TOKEN");
 
@@ -72,7 +71,6 @@ public class LogResource {
     for(Log log: logs) {
 
       if (log.getTitle().isEmpty() || log.getDetail().isEmpty()) {
-        excluded.add(log);
         continue;
       }
       log.setCreatedAt(new Date());
@@ -84,10 +82,7 @@ public class LogResource {
 
     logService.save(result);
 
-    return new ResponseEntity<>(
-            excluded.size() > 0 ? "{\"notice\":\"Some logs were not added: " + excluded.toString() + "\"}" : "",
-            HttpStatus.OK
-    );
+    return ResponseEntity.ok().build();
   }
 
   @PatchMapping("/store/{ids}")
