@@ -1,5 +1,7 @@
 package com.codenation.entity;
 
+import com.codenation.enums.Environment;
+import com.codenation.enums.Level;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -25,9 +27,10 @@ public class Log {
 	private String title;
 
 	@Column(nullable = false)
-	private String level;
+	@Enumerated(EnumType.STRING)
+	private Level level;
 
-	@Column(nullable = false)
+	@Column(nullable = false, columnDefinition="TEXT")
 	private String detail;
 
 	@CreationTimestamp
@@ -36,19 +39,18 @@ public class Log {
 	@Column(nullable = false)
 	private String origin;
 
-
 	@Column(length = 350)
 	private String token;
 
 	@Column(nullable = false)
 	private String generatedBy;
 
-
 	@Column(nullable = false)
-	private String env;
+	@Enumerated(EnumType.STRING)
+	private Environment environment;
 
 	private Boolean stored = false;
-	private Integer freq = 0;
+	private Integer events = 0;
 
 	@Override
 	public boolean equals(Object obj) {
@@ -69,7 +71,7 @@ public class Log {
 	}
 
 	public int hashCode() {
-		return Objects.hash(id, title, level, detail, createdAt, origin, token, generatedBy, env, stored, freq);
+		return Objects.hash(id, title, level, detail, createdAt, origin, token, generatedBy, environment, stored, events);
 
 	}
 }

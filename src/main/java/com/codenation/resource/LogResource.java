@@ -8,8 +8,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
@@ -23,20 +23,35 @@ public class LogResource {
   @Autowired
   private LogService logService;
 
-  @GetMapping("/{id}")
-  public Optional<Log> findById(@PathVariable Long id){
-    return logService.findById(id);
+  @GetMapping
+  public Page<Log> findAll(Pageable pageable) {
+    return logService.findAll(pageable);
   }
 
   @GetMapping("/{environment}")
-	public List<Log> 
-	findByEnvironment(@PathVariable String environment, @RequestParam(required = false) String level) {
+	public Page<Log> findByEnvironment(@PathVariable String environment, @RequestParam(required = false) String level, Pageable pageable) {
 		if(level != null) {
-			return logService.findByEnvironmentAndLevel(environment,level);
+			return logService.findByEnvironmentAndLevel(environment,level, pageable);
 		}
-		return logService.findByEnvironment(environment);
+		return logService.findByEnvironment(environment, pageable);
 	}
-  
+
+  @GetMapping("/{environment}/{id}")
+  public Optional<Log> findById(
+          @PathVariable String environment,
+          @PathVariable Long id) {
+    return logService.findByIdAndEnvironment(id, environment);
+  }
+
+  @GetMapping("/{environment}/search")
+  public Page<Log> searchByOriginOrLevel(
+          @PathVariable String environment,
+          @RequestParam(required = false) String origin,
+          @RequestParam(required = false) String level,
+          Pageable pageable) {
+
+    return logService.findByOriginOrLevel(origin, level, environment, pageable);
+  }
 
 
   @PostMapping
@@ -54,6 +69,10 @@ public class LogResource {
 
     List<Log> result = new ArrayList<>();
     for(Log log: logs) {
+
+      if (log.getTitle().isEmpty() || log.getDetail().isEmpty()) {
+        continue;
+      }
       log.setCreatedAt(new Date());
       log.setOrigin(req.getRemoteAddr());
       log.setGeneratedBy(email);
@@ -62,6 +81,7 @@ public class LogResource {
     }
 
     logService.save(result);
+
     return ResponseEntity.ok().build();
   }
 

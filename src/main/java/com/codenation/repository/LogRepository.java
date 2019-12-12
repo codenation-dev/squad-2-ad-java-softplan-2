@@ -15,15 +15,18 @@ public interface LogRepository extends PagingAndSortingRepository<Log, Long> {
 
   Page<Log> findAllByStored(Boolean stored, Pageable pageable);
 
-  Optional<Log> findById(Long id);
+  Optional<Log> findByStoredAndIdAndEnvironment(Boolean stored, Long id, String environment);
 
-  Page<Log> findByOriginContainingIgnoreCase(String origin, Pageable pageable);
+  Page<Log> findByStoredAndOriginContainingIgnoreCase(Boolean stored, String origin, Pageable pageable);
 
-  Page<Log> findByDetailContainingIgnoreCase(String detail, Pageable pageable);
+  Page<Log> findByStoredAndDetailContainingIgnoreCase(Boolean stored, String detail, Pageable pageable);
 
-  Page<Log> findByLevelContainingIgnoreCase(String level, Pageable pageable);
+  Page<Log> findByStoredAndLevelContainingIgnoreCase(Boolean stored, String level, Pageable pageable);
   
-  List<Log> findByEnvironment(String environment);
+  Page<Log> findByStoredAndEnvironmentIgnoreCase(Boolean stored, String environment, Pageable pageable);
 
-  List<Log> findByEnvironmentAndLevel(String environment, String level);
-  }
+  Page<Log> findByStoredAndEnvironmentAndLevelIgnoreCase(Boolean stored, String environment, String level, Pageable pageable);
+
+  Page<Log> findByStoredAndEnvironmentAndOriginOrLevelIgnoreCase(Boolean stored, String origin, String level, String environment, Pageable pageable);
+
+}

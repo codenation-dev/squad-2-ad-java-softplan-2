@@ -22,7 +22,7 @@ public class Role implements GrantedAuthority {
     @JsonIgnore
     private Collection<User> users;
 
-    @ManyToMany()
+    @ManyToMany
     @JoinTable(
             name = "roles_authorities",
             joinColumns = @JoinColumn(
