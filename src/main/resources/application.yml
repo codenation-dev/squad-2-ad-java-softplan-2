@@ -6,7 +6,7 @@ spring:
       path: /h2-console
   datasource:
     url: "jdbc:postgresql://remotemysql.com:3306/f6uQFipjWh"
-    driverClassName: org.postgresql.Driver
+    driverClassName: com.mysql.jdbc.Driver
     username: f6uQFipjWh
     password: 33jULpa4L5
   jpa.hibernate.ddl-auto: create
