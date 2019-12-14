@@ -86,3 +86,29 @@ ____
 Realiza uma consulta a partir de uma query.
 ______
 
+
+### Deploy
+
+Como fazer o Deploy
+
+```bash
+Comando para fazer Deploy
+```
+
+______
+
+
+
+
+### Teste
+
+Como fazer teste
+
+
+```bash
+Comando para fazer Deploy
+```
+
+
+______
+
