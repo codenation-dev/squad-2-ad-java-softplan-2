@@ -57,23 +57,23 @@ _____________________
 ###### **GET**
 Mostra a documentação da API gerada automaticamente pelo Swagger
 ______________
-#### "/user"
+#### "api/v1/user"
 ###### **POST**
 Salva um novo usuário caso este seja válido.
 ###### **GET**
 Mostra todos os usuários cadastrados.
 _______
-#### "/user/{id}"
+#### "api/v1/user/{id}"
 ###### **GET**
 Mostra o detalhamento do usuário pelo ID.
 ____
-#### "/log"
+#### "api/v1/log"
 ###### **POST**
 Salva um novo log.
 ###### **GET**
 Retorna uma lista com todos o logs cadastrados
 _________
-#### "/log/{id}"
+#### "api/v1/log/{id}"
 ###### **GET**
 Retorna o detalhamento do Log pelo ID.
 ###### **PATCH**
@@ -81,7 +81,7 @@ Arquiva o log juntamento com o parâmetro "strore".
 ###### **DELETE**
 Apaga o registro do banco de dados.
 ____
-#### "/log?search="
+#### "api/v1/log?search="
 ###### **GET**
 Realiza uma consulta a partir de uma query.
 ______
