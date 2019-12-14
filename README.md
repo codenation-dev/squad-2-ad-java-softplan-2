@@ -13,7 +13,11 @@
 
 ### Sobre
 
-Projeto Desenvolvido durante o programa de Aceleração Java da [Codenation](https://www.codenation.dev/) patrocionado pela [Softplan](https://www.softplan.com.br/).
+Projeto Desenvolvido durante o programa de Aceleração Java da [Codenation](https://www.codenation.dev/) patrocionado pela [Softplan](https://www.softplan.com.br/). 
+
+Central de log, como o próprio nome diz centraliza os logs de uma ou mais aplicações. Facilita a manutenção e agiliza o processo de manutenção e correção de erros.
+
+ [Clique Aqui](https://dashboard.heroku.com/apps) e veja a aplicação funcionando!
 
 
 ### Configuração
