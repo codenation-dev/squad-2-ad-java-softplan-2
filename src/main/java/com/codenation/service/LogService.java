@@ -21,7 +21,7 @@ public class LogService {
     Page<Log> result = logRepository.findAllByStored(false, pageable);
 
     for(Log log: result.getContent()){
-      log.setFreq(Collections.frequency(result.getContent(), log));
+      log.setEvents(Collections.frequency(result.getContent(), log));
     }
     return result;
   }
@@ -30,38 +30,37 @@ public class LogService {
     return logRepository.findById(id);
   }
 
-  public long count() {
-    return logRepository.count();
+  public Optional<Log> findByIdAndEnvironment(Long id, String environment) {
+    return logRepository.findByStoredAndIdAndEnvironment(false, id, environment);
   }
-
 
   public void deleteById(Long aLong) {
     logRepository.deleteById(aLong);
   }
 
   public Page<Log> findByOrigin(String origin, Pageable pageable) {
-    Page<Log> result = logRepository.findByOriginContainingIgnoreCase(origin, pageable);
+    Page<Log> result = logRepository.findByStoredAndOriginContainingIgnoreCase(false, origin, pageable);
 
     for(Log log: result.getContent()){
-      log.setFreq(Collections.frequency(result.getContent(), log));
+      log.setEvents(Collections.frequency(result.getContent(), log));
     }
     return result;
   }
 
   public Page<Log> findByDetail(String detail, Pageable pageable) {
-    Page<Log> result = logRepository.findByDetailContainingIgnoreCase(detail, pageable);
+    Page<Log> result = logRepository.findByStoredAndDetailContainingIgnoreCase(false, detail, pageable);
 
     for(Log log: result.getContent()){
-      log.setFreq(Collections.frequency(result.getContent(), log));
+      log.setEvents(Collections.frequency(result.getContent(), log));
     }
     return result;
   }
 
   public Page<Log> findByLevel(String level, Pageable pageable) {
-    Page<Log> result = logRepository.findByLevelContainingIgnoreCase(level, pageable);
+    Page<Log> result = logRepository.findByStoredAndLevelContainingIgnoreCase(false,  level, pageable);
 
     for(Log log: result.getContent()){
-      log.setFreq(Collections.frequency(result.getContent(), log));
+      log.setEvents(Collections.frequency(result.getContent(), log));
     }
 
     return result;
@@ -73,13 +72,17 @@ public class LogService {
     }
   }
   
-  public Page<Log> findByEnv(String environment, Pageable pageable) {
-		return logRepository.findByEnvIgnoreCase(environment, pageable);
+  public Page<Log> findByEnvironment(String environment, Pageable pageable) {
+		return logRepository.findByStoredAndEnvironmentIgnoreCase(false, environment, pageable);
 	}
   
-	public Page<Log> findByEnvAndLevel(String environment, String level,  Pageable pageable) {
-		return logRepository.findByEnvAndLevelIgnoreCase(environment, level, pageable);
+	public Page<Log> findByEnvironmentAndLevel(String environment, String level, Pageable pageable) {
+		return logRepository.findByStoredAndEnvironmentAndLevelIgnoreCase(false, environment, level, pageable);
 	}
+
+  public Page<Log> findByOriginOrLevel(String origin, String level, String environment, Pageable pageable) {
+    return logRepository.findByStoredAndEnvironmentAndOriginOrLevelIgnoreCase(false, origin, level, environment, pageable);
+  }
 
   
 }

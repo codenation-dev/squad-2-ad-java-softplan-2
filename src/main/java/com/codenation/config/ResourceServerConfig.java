@@ -22,7 +22,7 @@ public class ResourceServerConfig extends ResourceServerConfigurerAdapter {
             .antMatchers("/h2-console/**").permitAll()
             .antMatchers("/swagger-ui.html").permitAll()
             .antMatchers("/oauth/token").permitAll()
-            .antMatchers(HttpMethod.OPTIONS).permitAll()
+            .antMatchers(HttpMethod.OPTIONS, "/**").permitAll()
             .antMatchers(HttpMethod.POST,"/api/v1/user/**").hasAnyAuthority("CREATE_USER")
             .antMatchers(HttpMethod.PATCH,"/api/v1/user/**").hasAnyAuthority("ALTER_USER")
             .antMatchers(HttpMethod.POST,"/api/v1/log/**").hasAnyAuthority("WRITE")
