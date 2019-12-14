@@ -14,13 +14,14 @@ Central de log, como o próprio nome diz centraliza os logs de uma ou mais aplic
 
 ## Tecnologia
 
-* [Java8](https://rometools.github.io/rome/) - Sobre...
-* [HEROKU](http://www.dropwizard.io/1.0.2/docs/) - Sobre...
+* [Java 8](https://www.oracle.com/technetwork/java/javase/downloads/jre8-downloads-2133155.html) - Linguagem d eProgramação
+* [Heroku](https://dashboard.heroku.com) - Servidor Deploy
 * [Maven](https://maven.apache.org/) - Gerenciador de Dependencia
-* [Postman](https://rometools.github.io/rome/) - Sobre...
-* [Springboot](https://rometools.github.io/rome/) - Sobre...
-* [AssertJ](https://rometools.github.io/rome/) - Sobre...
-* [SWAGGER](https://rometools.github.io/rome/) - Sobre...
+* [Postman](https://www.getpostman.com/) - Plataforma de desenvolvimento de API
+* [Postgres](https://www.postgresql.org/) - Banco de dados
+* [Springboot](https://spring.io/projects/spring-boot) - Framework Java
+* [AssertJ](https://joel-costigliola.github.io/assertj/) - Framework de testess
+* [Swagger](https://swagger.io/) - Documentação automática
 
 
 
@@ -97,9 +98,9 @@ Realiza uma consulta a partir de uma query.
 
 
 
-### Deploy
+### Rodar Aplicação
 
-Como fazer o Deploy
+Como rodar a aplicação
 
 ```bash
 mvn springboot:run
