@@ -35,17 +35,21 @@ public class CustomUserDetailsService implements UserDetailsService {
   @Override
   public UserDetails loadUserByUsername(String email) {
 
-    User user = userRepository.findByEmail(email);
-    if (user == null) {
+    Optional<User> userOptional = userRepository.findByEmail(email);
+    Optional<Role> roleOptional = roleRepository.findByName("USER");
+
+    if (!userOptional.isPresent()) {
       return new org.springframework.security.core.userdetails.User(
               " ", " ", true, true, true, true,
-              getAuthorities(Collections.singletonList(roleRepository.findByName("ROLE_USER"))));
+              getAuthorities(Collections.singletonList(roleOptional.get())));
+    } else {
+      User user = userOptional.get();
+      return new org.springframework.security.core.userdetails.User(
+              user.getEmail(), user.getPassword(), true, true, true,
+              true, getAuthorities(user.getRoles()));
     }
-
-    return new org.springframework.security.core.userdetails.User(
-            user.getEmail(), user.getPassword(), true, true, true,
-            true, getAuthorities(user.getRoles()));
   }
+
 
   private Collection<? extends GrantedAuthority> getAuthorities(
           Collection<Role> roles) {
@@ -57,12 +61,11 @@ public class CustomUserDetailsService implements UserDetailsService {
 
     List<String> privileges = new ArrayList<>();
     List<Authority> collection = new ArrayList<>();
-    for (Role role : roles) {
-      collection.addAll(role.getAuthorities());
-    }
-    for (Authority item : collection) {
-      privileges.add(item.getName());
-    }
+
+    roles.forEach(item -> collection.addAll(item.getAuthorities()));
+
+    collection.forEach(item -> privileges.add(item.getName()));
+
     return privileges;
   }
 

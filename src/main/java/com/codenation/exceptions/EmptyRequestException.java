@@ -1,4 +1,4 @@
-package com.codenation.exceptions.handlers;
+package com.codenation.exceptions;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;

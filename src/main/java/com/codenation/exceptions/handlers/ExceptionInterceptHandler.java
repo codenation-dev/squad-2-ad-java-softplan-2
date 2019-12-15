@@ -1,7 +1,6 @@
-package com.codenation.exceptions;
+package com.codenation.exceptions.handlers;
 
-import com.codenation.exceptions.handlers.EmptyRequestException;
-import com.codenation.exceptions.handlers.ExceptionDTO;
+import com.codenation.exceptions.EmptyRequestException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;

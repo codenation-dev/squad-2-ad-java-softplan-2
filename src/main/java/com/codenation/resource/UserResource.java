@@ -50,27 +50,36 @@ public class UserResource {
 
   @PostMapping
   public ResponseEntity<HttpEntity> create(@RequestBody @Valid UserDTO userDTO){
-    Role role = roleRepository.findByName("USER");
-
     User result = new User();
-    result.setRoles(Collections.singletonList(role));
+
+    Optional<Role> roleOptional = roleRepository.findByName("USER");
+
+    if(roleOptional.isPresent()){
+      Role role = roleOptional.get();
+      result.setRoles(Collections.singletonList(role));
+    }
+
     result.setName(userDTO.getName());
     result.setEmail(userDTO.getEmail());
     result.setPassword(passwordEncoder.encode(userDTO.getPassword()));
 
     userService.save(result);
 
-    return ResponseEntity.ok().build();
+    return ResponseEntity.ok().build(); //create
   }
 
   @PatchMapping("/{id}")
   public ResponseEntity<HttpEntity> alterRole(@PathVariable Long id, @RequestBody String role){
+    Role roleResult;
     Optional<User> userOptional = userService.findById(id);
-    Role roleResult = roleRepository.findByName(role);
+    Optional<Role> roleOptional = roleRepository.findByName(role);
 
-    if(userOptional.isPresent() && roleResult != null){
+    if(userOptional.isPresent() && roleOptional.isPresent()){
       User user = userOptional.get();
+      roleResult = roleOptional.get();
+
       user.setRoles(Collections.singletonList(roleResult));
+
       userService.save(user);
       return ResponseEntity.ok().build();
     }

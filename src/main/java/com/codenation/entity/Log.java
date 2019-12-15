@@ -5,6 +5,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.CreationTimestamp;
+import org.springframework.util.StringUtils;
 
 import java.util.Date;
 import java.util.Objects;
@@ -36,13 +37,8 @@ public class Log {
 	@Column(nullable = false)
 	private String origin;
 
-
-	@Column(length = 350)
-	private String token;
-
 	@Column(nullable = false)
 	private String generatedBy;
-
 
 	@Column(nullable = false)
 	private String env;
@@ -69,7 +65,15 @@ public class Log {
 	}
 
 	public int hashCode() {
-		return Objects.hash(id, title, level, detail, createdAt, origin, token, generatedBy, env, stored, freq);
+		return Objects.hash(id, title, level, detail, createdAt, origin, generatedBy, env, stored, freq);
+	}
 
+	public boolean isValid(){
+		return !StringUtils.isEmpty(this.detail) &&
+						!StringUtils.isEmpty(this.title) &&
+						!StringUtils.isEmpty(this.origin) &&
+						!StringUtils.isEmpty(this.level) &&
+						!StringUtils.isEmpty(this.generatedBy) &&
+						!StringUtils.isEmpty(this.env);
 	}
 }

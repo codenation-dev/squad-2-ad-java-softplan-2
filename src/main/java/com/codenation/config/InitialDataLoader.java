@@ -13,10 +13,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 
 @Component
 public class InitialDataLoader implements
@@ -80,8 +77,6 @@ public class InitialDataLoader implements
 
     createRoleIfNotFound("PRODUCTION", Arrays.asList(readPrivilege, productionPrivilege));
 
-    createRoleIfNotFound("DEV", Arrays.asList(readPrivilege, createUserPrivilege));
-
     Role adminRole = createRoleIfNotFound("ADMIN", adminPrivileges);
 
     User user = new User();
@@ -97,24 +92,31 @@ public class InitialDataLoader implements
   @Transactional
   public Authority createPrivilegeIfNotFound(String name) {
 
-    Authority authority = authorityRepository.findByName(name);
-    if (authority == null) {
+    Authority authority;
+    Optional<Authority> authorityOptional = authorityRepository.findByName(name);
+    if (!authorityOptional.isPresent()) {
       authority = new Authority(name);
       authorityRepository.save(authority);
+
+      return authority;
     }
-    return authority;
+    return authorityOptional.get();
   }
 
   @Transactional
   public Role createRoleIfNotFound(
           String name, Collection<Authority> privileges) {
 
-    Role role = roleRepository.findByName(name);
-    if (role == null) {
+    Role role;
+    Optional<Role> roleOptional = roleRepository.findByName(name);
+    if (!roleOptional.isPresent()) {
       role = new Role(name);
       role.setAuthorities(privileges);
       roleRepository.save(role);
+
+      return role;
     }
-    return role;
+
+    return roleOptional.get();
   }
 }
