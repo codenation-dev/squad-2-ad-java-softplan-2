@@ -38,34 +38,6 @@ public class LogService {
     logRepository.deleteById(aLong);
   }
 
-  public Page<Log> findByOrigin(String origin, Pageable pageable) {
-    Page<Log> result = logRepository.findByStoredAndOriginContainingIgnoreCase(false, origin, pageable);
-
-    for(Log log: result.getContent()){
-      log.setEvents(Collections.frequency(result.getContent(), log));
-    }
-    return result;
-  }
-
-  public Page<Log> findByDetail(String detail, Pageable pageable) {
-    Page<Log> result = logRepository.findByStoredAndDetailContainingIgnoreCase(false, detail, pageable);
-
-    for(Log log: result.getContent()){
-      log.setEvents(Collections.frequency(result.getContent(), log));
-    }
-    return result;
-  }
-
-  public Page<Log> findByLevel(String level, Pageable pageable) {
-    Page<Log> result = logRepository.findByStoredAndLevelContainingIgnoreCase(false,  level, pageable);
-
-    for(Log log: result.getContent()){
-      log.setEvents(Collections.frequency(result.getContent(), log));
-    }
-
-    return result;
-  }
-
   public void save(List<Log> objects) {
     for(Log log: objects){
       logRepository.save(log);
