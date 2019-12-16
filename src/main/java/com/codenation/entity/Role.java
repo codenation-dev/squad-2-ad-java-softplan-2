@@ -1,14 +1,13 @@
 package com.codenation.entity;
 
-import javax.persistence.*;
-import java.util.Collection;
-import java.util.Objects;
-
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
-import org.springframework.util.StringUtils;
+
+import javax.persistence.*;
+import java.util.Collection;
+import java.util.Objects;
 
 @Entity
 @Data

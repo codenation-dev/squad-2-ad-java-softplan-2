@@ -24,7 +24,6 @@ import org.springframework.security.oauth2.provider.token.store.JwtAccessTokenCo
 import org.springframework.security.oauth2.provider.token.store.JwtTokenStore;
 import org.springframework.security.oauth2.provider.token.store.KeyStoreKeyFactory;
 
-import java.security.Key;
 import java.security.KeyPair;
 import java.security.interfaces.RSAPublicKey;
 import java.util.Collections;
@@ -32,7 +31,7 @@ import java.util.Map;
 
 @Configuration
 @EnableAuthorizationServer
-public class AuthorizationServerConfig extends WebSecurityConfigurerAdapter {
+public class AuthorizationServerConfig extends WebSecurityConfigurerAdapter{
 
   @Autowired
   private CustomUserDetailsService userService;
@@ -70,11 +69,8 @@ public class AuthorizationServerConfig extends WebSecurityConfigurerAdapter {
 
   @Bean
   public JwtAccessTokenConverter accessTokenConverter() {
-    Map<String, String> customHeaders =
-            Collections.singletonMap("kid", "squad2-key-id");
-    return new  JwtCustomHeaders(
-            customHeaders,
-            keyPair());
+    Map<String, String> customHeaders = Collections.singletonMap("kid", "squad2");
+    return new  JwtCustomHeaders(customHeaders, keyPair());
   }
 
   @Bean
@@ -99,8 +95,7 @@ public class AuthorizationServerConfig extends WebSecurityConfigurerAdapter {
     RSAKey.Builder builder = new RSAKey.Builder((RSAPublicKey) keyPair().getPublic())
             .keyUse(KeyUse.SIGNATURE)
             .algorithm(JWSAlgorithm.RS256)
-            .keyID("squad2-key-id");
+            .keyID("squad2");
     return new JWKSet(builder.build());
   }
-
 }

@@ -23,6 +23,7 @@ public class ResourceServerConfig extends ResourceServerConfigurerAdapter {
             .antMatchers("/swagger-ui.html").permitAll()
             .antMatchers("/oauth/token").permitAll()
             .antMatchers(HttpMethod.OPTIONS, "/**").permitAll()
+            .antMatchers(HttpMethod.GET, "/**").permitAll()
             .antMatchers(HttpMethod.POST,"/api/v1/user/forgot_password/**").permitAll()
             .antMatchers(HttpMethod.POST,"/api/v1/user/**").hasAnyAuthority("CREATE_USER")
             .antMatchers(HttpMethod.PATCH,"/api/v1/user/**").hasAnyAuthority("ALTER_USER")

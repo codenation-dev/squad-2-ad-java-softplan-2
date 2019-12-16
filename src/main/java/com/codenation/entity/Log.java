@@ -9,10 +9,9 @@ import lombok.NoArgsConstructor;
 import org.hibernate.annotations.CreationTimestamp;
 import org.springframework.util.StringUtils;
 
+import javax.persistence.*;
 import java.util.Date;
 import java.util.Objects;
-
-import javax.persistence.*;
 
 @Entity
 @Data

@@ -1,6 +1,5 @@
 package com.codenation.dto;
 
-import com.codenation.entity.Log;
 import com.codenation.entity.Role;
 import com.codenation.entity.User;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -11,9 +10,7 @@ import lombok.NoArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
-import javax.persistence.OneToMany;
 import javax.transaction.Transactional;
-import javax.validation.constraints.Null;
 import java.util.Collection;
 import java.util.List;
 

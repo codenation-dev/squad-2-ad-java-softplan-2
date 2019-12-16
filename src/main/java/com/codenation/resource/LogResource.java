@@ -12,12 +12,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.validation.Valid;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicReference;
 
@@ -67,8 +65,6 @@ public class LogResource {
 	  return orderBy == null ?
             logService.findByEnvironmentAndLevelOrDetailOrOrigin(environment, level, detail, origin, pageable) :
 		        logService.findByEnvironmentAndLevelOrDetailOrOriginOrderBy(environment, level, detail, origin, orderBy, pageable);
-
-
   }
 
 
