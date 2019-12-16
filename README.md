@@ -124,7 +124,7 @@ mvn test
 ## Autores
 
 ![Jean](https://avatars1.githubusercontent.com/u/50720434?s=40&v=4)Jean [@ghanizadev](https://github.com/ghanizadev)
-/ ![Igor](https://avatars0.githubusercontent.com/u/12281063?s=40&v=4) Igor [@igorcacalcantedb](https://github.com/igorcavalcantedb) / ![Jovani](https://avatars3.githubusercontent.com/u/49798215?s=40&v=4)Jovani [@JtMegazord](https://github.com/JtMegazord) / 
+/ ![Igor](https://avatars0.githubusercontent.com/u/12281063?s=40&v=4) Igor [@igorcavalcantedb](https://github.com/igorcavalcantedb) / ![Jovani](https://avatars3.githubusercontent.com/u/49798215?s=40&v=4)Jovani [@JtMegazord](https://github.com/JtMegazord) / 
 ![Eduardo](https://avatars0.githubusercontent.com/u/27643901?s=40&v=4) Eduardo [@spiandorello](https://github.com/spiandorello) /![Roberta](https://avatars0.githubusercontent.com/u/27643901?s=40&v=4) Roberta [@robertaavila](https://github.com/robertaavila) / ![Túlio](https://avatars0.githubusercontent.com/u/27643901?s=40&v=4)Túlio [@yandiro](https://github.com/yandiro)
 
 
