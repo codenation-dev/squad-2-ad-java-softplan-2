@@ -1,8 +1,10 @@
 package com.codenation;
 
 
+import com.codenation.Entity.OAuthResponse;
 import com.codenation.entity.Log;
 import com.codenation.resource.LogResource;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.http.Header;
 import org.apache.http.HttpEntity;
 import org.apache.http.NameValuePair;
@@ -21,9 +23,9 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.test.context.junit4.SpringRunner;
+import springfox.documentation.service.OAuth;
 
 import java.io.IOException;
-import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -84,14 +86,18 @@ public class LogTests {
         System.out.println("Entities");
         System.out.println(EntityUtils.toString(postReq.getEntity(), "UTF-8"));
 
-
         CloseableHttpResponse response = httpClient.execute(postReq);
 
         HttpEntity httpResponse = response.getEntity();
         String responseString = EntityUtils.toString(httpResponse, "UTF-8");
 
+        OAuthResponse objResponse = new ObjectMapper().readValue(responseString, OAuthResponse.class);
+
         System.out.println("Response");
         System.out.println(responseString);
+        System.out.println("");
+        System.out.println(objResponse.getAccess_token());
+
     }
 
     void salvarLog() {
