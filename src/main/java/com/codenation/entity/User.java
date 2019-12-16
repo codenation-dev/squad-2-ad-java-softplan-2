@@ -1,5 +1,6 @@
 package com.codenation.entity;
 
+import com.codenation.dto.UserDTO;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -48,6 +49,13 @@ public class User implements Serializable {
 		this.email = email;
 		this.password = password;
 		this.roles = roles;
+	}
+
+	public User (UserDTO userDTO){
+		this.name = userDTO.getName();
+		this.email = userDTO.getEmail();
+		this.password = userDTO.getPassword();
+		this.roles = userDTO.getRoles();
 	}
 
 	public User(String name, String email, String password) {

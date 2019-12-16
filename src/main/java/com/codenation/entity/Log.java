@@ -66,9 +66,10 @@ public class Log {
 		}
 		Log other = (Log) obj;
 		return Objects.equals(detail, other.detail)
-				&& Objects.equals(generatedBy, other.generatedBy)
-				&& Objects.equals(level, other.level) && Objects.equals(origin, other.origin)
-				&& Objects.equals(title, other.title);
+						&& Objects.equals(generatedBy, other.generatedBy)
+						&& Objects.equals(level, other.level)
+						&& Objects.equals(origin, other.origin)
+						&& Objects.equals(title, other.title);
 	}
 
 	public int hashCode() {
@@ -76,11 +77,9 @@ public class Log {
 	}
 
 	public boolean isValid(){
-		return !StringUtils.isEmpty(this.detail) &&
-						!StringUtils.isEmpty(this.title) &&
-						!StringUtils.isEmpty(this.origin) &&
-						!StringUtils.isEmpty(this.level) &&
-						!StringUtils.isEmpty(this.generatedBy) &&
-						!StringUtils.isEmpty(this.environment);
+		return !StringUtils.isEmpty(this.detail)
+						&& !StringUtils.isEmpty(this.title)
+						&& !StringUtils.isEmpty(this.level)
+						&& !StringUtils.isEmpty(this.environment);
 	}
 }

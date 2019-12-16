@@ -3,6 +3,8 @@ package com.codenation.resource;
 import com.codenation.dto.UserDTO;
 import com.codenation.entity.Role;
 import com.codenation.entity.User;
+import com.codenation.exceptions.RoleNotFoundException;
+import com.codenation.exceptions.UserNotFoundException;
 import com.codenation.repository.RoleRepository;
 import com.codenation.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -37,16 +39,14 @@ public class UserResource {
   }
 
   @GetMapping("/{id}")
-  public UserDTO findById(Long id){
-    Optional<User> userOptional = userService.findById(id);
+  public UserDTO findById(@PathVariable Long id) throws UserNotFoundException {
+    Optional<UserDTO> userOptional = userService.findById(id);
 
     if(userOptional.isPresent()) {
-      User user = userOptional.get();
-
-      return new UserDTO(user.getId(), user.getName(), user.getEmail(), user.getPassword(), user.getAuthorities());
+      User user = new User(userOptional.get());
+      return new UserDTO(user);
     }
-
-    return null;
+    throw new UserNotFoundException();
   }
 
   @PostMapping
@@ -66,25 +66,25 @@ public class UserResource {
 
     userService.save(result);
 
-    return ResponseEntity.ok().build(); //create
+    return ResponseEntity.status(201).build();
   }
 
   @PatchMapping("/{id}")
-  public ResponseEntity<HttpEntity> alterRole(@PathVariable Long id, @RequestBody String role){
+  public ResponseEntity<HttpEntity> alterRole(@PathVariable Long id, @RequestBody String role) throws UserNotFoundException, RoleNotFoundException {
     Role roleResult;
-    Optional<User> userOptional = userService.findById(id);
+    Optional<UserDTO> userOptional = userService.findById(id);
     Optional<Role> roleOptional = roleRepository.findByName(role);
 
-    if(userOptional.isPresent() && roleOptional.isPresent()){
-      User user = userOptional.get();
-      roleResult = roleOptional.get();
+    if(!userOptional.isPresent()) throw new UserNotFoundException();
+    if(!roleOptional.isPresent()) throw new RoleNotFoundException();
 
-      user.setRoles(Collections.singletonList(roleResult));
+    User user = new User(userOptional.get());
+    roleResult = roleOptional.get();
 
-      userService.save(user);
-      return ResponseEntity.ok().build();
-    }
-    return ResponseEntity.badRequest().build();
+    user.setRoles(Collections.singletonList(roleResult));
+
+    userService.save(user);
+    return ResponseEntity.ok().build();
   }
 
 }

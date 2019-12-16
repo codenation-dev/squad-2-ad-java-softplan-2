@@ -1,6 +1,8 @@
 package com.codenation.dto;
 
 import com.codenation.entity.Log;
+import com.codenation.entity.Role;
+import com.codenation.entity.User;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -21,14 +23,24 @@ import java.util.Collection;
 @Transactional
 public class UserDTO implements UserDetails {
 
-  @Null
   private Long id;
 
   private String name;
   private String email;
   @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
   private String password;
+  @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
   private Collection<GrantedAuthority> authorities;
+  private Collection<Role> roles;
+
+  public UserDTO(User user) {
+    this.id = user.getId();
+    this.name = user.getName();
+    this.password = user.getPassword();
+    this.authorities = user.getAuthorities();
+    this.email = user.getEmail();
+    this.roles = user.getRoles();
+  }
 
   @Override
   public Collection<GrantedAuthority> getAuthorities() {

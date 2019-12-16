@@ -32,7 +32,8 @@ public class ResourceServerConfig extends ResourceServerConfigurerAdapter {
             .antMatchers("/api/v1/log/stage/**").hasAnyAuthority("STAGE")
             .antMatchers("/api/v1/log/production/**").hasAnyAuthority("PRODUCTION")
             .anyRequest().authenticated();
-    http.cors().and().csrf().disable();
-    http.headers().frameOptions().disable();
+    //http.cors().and().csrf().disable();
+    //    http.headers().frameOptions().disable();
+    http.csrf().disable().headers().frameOptions().sameOrigin().and().anonymous().and().httpBasic().disable();
   }
 }

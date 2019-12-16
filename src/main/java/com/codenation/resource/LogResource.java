@@ -1,20 +1,21 @@
 package com.codenation.resource;
 
 import com.codenation.entity.Log;
+import com.codenation.enums.Environment;
 import com.codenation.exceptions.EmptyRequestException;
+import com.codenation.exceptions.LogNotFoundException;
 import com.codenation.service.LogService;
+import com.codenation.service.UserService;
 import com.codenation.utils.JWTParser;
 import com.codenation.utils.WebUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.validation.Valid;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicReference;
 
@@ -25,44 +26,53 @@ public class LogResource {
   @Autowired
   private LogService logService;
 
+  @Autowired
+  private UserService userService;
+
   @GetMapping
   public Page<Log> findAll(Pageable pageable) {
     return logService.findAll(pageable);
   }
 
   @GetMapping("/{environment}")
-	public Page<Log> findByEnvironment(@PathVariable String environment, @RequestParam(required = false) String level, Pageable pageable) {
+	public Page<Log> findByEnvironment(@PathVariable String environment,
+                                     @RequestParam(required = false) String level,
+                                     Pageable pageable) {
 		if(level != null) {
-			return logService.findByEnvironmentAndLevel(environment,level, pageable);
+			return logService.findByEnvironmentAndLevel(Enum.valueOf(Environment.class, environment.toUpperCase()),level, pageable);
 		}
-		return logService.findByEnvironment(environment, pageable);
+		return logService.findByEnvironment(Enum.valueOf(Environment.class, environment.toUpperCase()), pageable);
 	}
 
   @GetMapping("/{environment}/{id}")
-  public Optional<Log> findById(
+  public Log findById(
           @PathVariable String environment,
-          @PathVariable Long id) {
-    return logService.findByIdAndEnvironment(id, environment);
+          @PathVariable Long id) throws LogNotFoundException {
+    Optional<Log> result = logService.findByIdAndEnvironment(id, Enum.valueOf(Environment.class, environment.toUpperCase()));
+
+    return result.orElseThrow(LogNotFoundException::new);
   }
 
   @GetMapping("/{environment}/search")
   public Page<Log> searchByOriginOrLevel(
           @PathVariable String environment,
+          @RequestParam String query,
           @RequestParam(required = false) String origin,
           @RequestParam(required = false) String level,
+          @RequestParam(required = false) String detail,
           Pageable pageable) {
 
-    return logService.findByOriginOrLevel(origin, level, environment, pageable);
+    return logService.findByOriginOrLevelOrDetail(origin, level, detail, Enum.valueOf(Environment.class, environment.toUpperCase()), pageable);
   }
 
 
   @PostMapping
   public ResponseEntity<HttpEntity> create(@RequestBody List<Log> logs, HttpServletRequest req) throws EmptyRequestException {
+
     AtomicReference<Boolean> flag = new AtomicReference<>(false);
     logs.forEach(log -> {
       if(!log.isValid()) flag.set(true);
     });
-
 
     if(flag.get()) throw new EmptyRequestException();
 
@@ -73,16 +83,20 @@ public class LogResource {
 
     Map<String, Object> jwtMap = new JWTParser().parseToken(jwt);
 
-    String email = (String) jwtMap.getOrDefault("user_name", "NO EMAIL SET"); //TODO name para requisição
+    AtomicReference<String> email = new AtomicReference<>((String)jwtMap.getOrDefault("user_name", "NO EMAIL SET"));
+    userService.findByEmail(email.get()).ifPresent(
+            user -> {
+              email.set(user.getName());
+            });
+
     String token = (String) jwtMap.getOrDefault("jti", "NO TOKEN SET");
 
     logs.forEach(log -> {
-      log.setGeneratedBy(email);
+      log.setGeneratedBy(email.get());
       log.setToken(token);
       log.setCreatedAt(new Date());
       log.setOrigin(req.getRemoteAddr());
     });
-
 
     logService.save(logs);
 
@@ -102,12 +116,15 @@ public class LogResource {
 
     if (result.isEmpty()) throw new EmptyRequestException();
 
-    return ResponseEntity.ok().build();
+    return ResponseEntity.status(201).build();
   }
 
   @DeleteMapping("/{id}")
-  public ResponseEntity<HttpEntity> delete(@PathVariable("id") Long id){
-    logService.deleteById(id);
-    return ResponseEntity.status(201).build();
+  public ResponseEntity<HttpEntity> delete(@PathVariable("id") Long id) throws LogNotFoundException {
+      if (logService.existsById(id)){
+        logService.deleteById(id);
+        return ResponseEntity.status(201).build();
+      }
+      throw new LogNotFoundException();
   }
 }
