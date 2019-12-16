@@ -76,7 +76,7 @@ public class LogResource {
       if(!log.isValid()) flag.set(true);
     });
 
-    if(flag.get()) throw new EmptyRequestException();
+    if(flag.get().equals(true)) throw new EmptyRequestException();
 
     Map<String, String> headers = new WebUtils().getHeadersInfo(req);
 
@@ -90,9 +90,9 @@ public class LogResource {
     AtomicReference<String> email = new AtomicReference<>(emailHeader);
 
     userService.findByEmail(email.get()).ifPresent(
-            user -> {
-              email.set(user.getName());
-            });
+            user ->
+              email.set(user.getName())
+            );
 
     String token = (String) jwtMap.getOrDefault("jti", "NO TOKEN SET");
 
@@ -126,7 +126,7 @@ public class LogResource {
 
   @DeleteMapping("/{id}")
   public ResponseEntity<HttpEntity> delete(@PathVariable("id") Long id) throws LogNotFoundException {
-      if (logService.existsById(id)){
+      if (logService.existsById(id).equals(true)){
         logService.deleteById(id);
         return ResponseEntity.status(201).build();
       }

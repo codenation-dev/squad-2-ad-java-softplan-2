@@ -1,19 +1,14 @@
 package com.codenation.exceptions;
 
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-
-@Getter
-@Setter
-@NoArgsConstructor
 public class EmptyRequestException extends Exception {
-  private String error = "resquisicao_nula";
-  private String error_description = "A requisicao esta vazia ou contem dados invalidos";
+  private static final String ERROR = "resquisicao_nula";
+  private static final String ERROR_DESCRIPTION= "A requisicao esta vazia ou contem dados invalidos";
 
-  public EmptyRequestException(
-          String error, String error_description) {
-    this.error = error;
-    this.error_description = error_description;
+  public static String getError() {
+    return ERROR;
+  }
+
+  public static String getErrorDescription() {
+    return ERROR_DESCRIPTION;
   }
 }

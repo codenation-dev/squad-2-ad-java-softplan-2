@@ -19,9 +19,9 @@ public class UserService {
 
   public List<UserDTO> findAll() {
     List<UserDTO> resultSet = new ArrayList<>();
-    userRepository.findAll().forEach(user -> {
-      resultSet.add(new UserDTO(user));
-    });
+    userRepository.findAll().forEach(user ->
+      resultSet.add(new UserDTO(user))
+    );
 
     return resultSet;
   }

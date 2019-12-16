@@ -32,6 +32,10 @@ import java.util.Map;
 @Configuration
 @EnableAuthorizationServer
 public class AuthorizationServerConfig extends WebSecurityConfigurerAdapter{
+  private static final String KEYID = "squad2";
+  private static final String ALIAS = "squad2";
+  private static final String SECRET = "secret";
+  private static final String KEYSTORE = "squad2_rsa.jks";
 
   @Autowired
   private CustomUserDetailsService userService;
@@ -69,7 +73,7 @@ public class AuthorizationServerConfig extends WebSecurityConfigurerAdapter{
 
   @Bean
   public JwtAccessTokenConverter accessTokenConverter() {
-    Map<String, String> customHeaders = Collections.singletonMap("kid", "squad2");
+    Map<String, String> customHeaders = Collections.singletonMap("kid", KEYID);
     return new  JwtCustomHeaders(customHeaders, keyPair());
   }
 
@@ -85,9 +89,9 @@ public class AuthorizationServerConfig extends WebSecurityConfigurerAdapter{
 
   @Bean
   public KeyPair keyPair () {
-    ClassPathResource ksFile = new ClassPathResource("squad2_rsa.jks");
-    KeyStoreKeyFactory ksFactory = new KeyStoreKeyFactory(ksFile, "secret".toCharArray());
-    return ksFactory.getKeyPair("squad2");
+    ClassPathResource ksFile = new ClassPathResource(KEYSTORE);
+    KeyStoreKeyFactory ksFactory = new KeyStoreKeyFactory(ksFile, SECRET.toCharArray());
+    return ksFactory.getKeyPair(ALIAS);
   }
 
   @Bean
@@ -95,7 +99,7 @@ public class AuthorizationServerConfig extends WebSecurityConfigurerAdapter{
     RSAKey.Builder builder = new RSAKey.Builder((RSAPublicKey) keyPair().getPublic())
             .keyUse(KeyUse.SIGNATURE)
             .algorithm(JWSAlgorithm.RS256)
-            .keyID("squad2");
+            .keyID(KEYID);
     return new JWKSet(builder.build());
   }
 }
