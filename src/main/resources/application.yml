@@ -11,11 +11,14 @@ spring:
     password: sa
   jpa.hibernate.ddl-auto: create
 
+security.oauth2:
+  client:
+    client-id: "squad2"
+    client-secret: "secret"
+    scope: "password"
+    grant-type: "password"
+  resource:
+    jwk:
+      key-set-uri: http://localhost:8080/sso-auth-server/.well-known/jwks.json
 
-spring.mvc.dispatch-options-request: true
-
-security.oauth2.client:
-  client-id: "squad2"
-  client-secret: "secret"
-  scope: "password"
-  grant-type: "password"
+spring.security.oauth2.resourceserver.jwk-set-uri: http://localhost:8081/sso-auth-server/.well-known/jwks.json
