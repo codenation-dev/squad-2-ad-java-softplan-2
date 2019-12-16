@@ -22,6 +22,29 @@ public class LogService {
     return logRepository.existsById(id);
   }
 
+  private Page<Log> countEvents(Page<Log> logs){
+    List<Log> tmp = new ArrayList<>();
+
+    logs.getContent().forEach(log -> {
+      if (!tmp.contains(log)){
+
+        Integer events = events(log);
+        log.setEvents(events);
+        tmp.add(log);
+
+      } else{
+        tmp.stream()
+                .filter(item -> item.equals(log))
+                .findAny()
+                .ifPresent(item ->
+                        log.setEvents(item.getEvents())
+                );
+      }
+    });
+
+    return logs;
+  }
+
   public Integer events (Log log){
     return logRepository.countByStoredAndTitleAndDetailAndOriginAndLevelAndEnvironment(
             false,
@@ -36,26 +59,7 @@ public class LogService {
   public Page<Log> findAll(Pageable pageable) {
     Page<Log> result = logRepository.findAllByStored(false, pageable);
 
-    List<Log> tmp = new ArrayList<>();
-
-    result.forEach(log -> {
-      if (!tmp.contains(log)){
-
-        Integer events = events(log);
-        log.setEvents(events);
-        tmp.add(log);
-
-      } else{
-        tmp.stream()
-                .filter(item -> item.equals(log))
-                .findFirst()
-                .ifPresent(item -> {
-                  log.setEvents(item.getEvents());
-                });
-      }
-    });
-
-    return result;
+    return countEvents(result);
   }
 
   public Optional<Log> findById(Long id) {
@@ -65,9 +69,9 @@ public class LogService {
   public Optional<Log> findByIdAndEnvironment(Long id, Environment environment) {
     Optional<Log> result = logRepository.findByStoredAndIdAndEnvironment(false, id, environment);
 
-    result.ifPresent(item -> {
-      item.setEvents(events(item));
-    });
+    result.ifPresent(item ->
+      item.setEvents(events(item))
+    );
 
     return result;
   }
@@ -83,83 +87,20 @@ public class LogService {
   }
   
   public Page<Log> findByEnvironment(Environment environment, Pageable pageable) {
-		Page<Log> result =  logRepository.findByStoredAndEnvironmentIgnoreCase(false, environment, pageable);
+		Page<Log> result =  logRepository.findByStoredAndEnvironment(false, environment, pageable);
 
-    List<Log> tmp = new ArrayList<>();
-
-    result.getContent().forEach(log -> {
-      if (!tmp.contains(log)){
-
-        Integer events = events(log);
-        log.setEvents(events);
-        tmp.add(log);
-
-      } else{
-        tmp.stream()
-                .filter(item -> item.equals(log))
-                .findFirst()
-                .ifPresent(item -> {
-                  log.setEvents(item.getEvents());
-                });
-      }
-    });
-
-    return result;
-	}
+    return countEvents(result);
+  }
   
 	public Page<Log> findByEnvironmentAndLevel(Environment environment, String level, Pageable pageable) {
-		Page<Log> result = logRepository.findByStoredAndEnvironmentAndLevelIgnoreCase(false, environment, level, pageable);
+		Page<Log> result = logRepository.findByStoredAndEnvironmentAndLevel(false, environment, level, pageable);
 
-    List<Log> tmp = new ArrayList<>();
-
-    result.getContent().forEach(log -> {
-      if (!tmp.contains(log)){
-
-        Integer events = events(log);
-        log.setEvents(events);
-        tmp.add(log);
-
-      } else{
-        tmp.stream()
-                .filter(item -> item.equals(log))
-                .findFirst()
-                .ifPresent(item -> {
-                  log.setEvents(item.getEvents());
-                });
-      }
-    });
-
-    return result;
-	}
-
-  public Page<Log> findByOriginOrLevelOrDetail(String origin, String level, String detail, Environment environment, Pageable pageable) {
-    Page<Log> result = logRepository.findByStoredAndEnvironmentAndOriginContainingOrLevelContainingIgnoreCaseOrDetailContainingIgnoreCase(false, origin, level, detail, environment, pageable);
-
-    List<Log> tmp = new ArrayList<>();
-
-    result.getContent().forEach(log -> {
-      if (!tmp.contains(log)){
-
-        Integer events = events(log);
-        log.setEvents(events);
-        tmp.add(log);
-
-      } else{
-        tmp.stream()
-                .filter(item -> item.equals(log))
-                .findFirst()
-                .ifPresent(item -> {
-                  log.setEvents(item.getEvents());
-                });
-      }
-    });
-
-    return result;
+    return countEvents(result);
   }
 
 public Page<Log> findByEnvironmentAndLevelOrDetailOrOrigin(String environment, String level, String detail,
 		String origin, Pageable pageable) {
-	return logRepository.findByStoredAndEnvironmentOrLevelIgnoreCaseOrDetailOrOrigin(
+	return logRepository.findByStoredAndEnvironmentOrLevelOrDetailContainingIgnoreCaseOrOriginContaining(
 	        false,
           Enum.valueOf(Environment.class, environment),
           level,
@@ -171,14 +112,14 @@ public Page<Log> findByEnvironmentAndLevelOrDetailOrOrigin(String environment, S
 
 public Page<Log> findByEnvironmentAndLevelOrDetailOrOriginOrderBy(String environment, String level, String detail,
 		String origin, String orderBy, Pageable pageable) {
-	return orderBy .equals("level") ? logRepository.findByStoredAndEnvironmentOrLevelIgnoreCaseOrDetailOrOriginOrderByLevelAsc(
+	return orderBy.equals("level") ? logRepository.findByStoredAndEnvironmentOrLevelIgnoreCaseOrDetailContainingIgnoreCaseOrOriginOrderByLevelAsc(
 	        false,
           Enum.valueOf(Environment.class, environment),
           level,
           detail,
           origin,
           pageable
-  ):logRepository.findByStoredAndEnvironmentOrLevelIgnoreCaseOrDetailOrOriginOrderByEventsAsc(
+  ):logRepository.findByStoredAndEnvironmentOrLevelOrDetailContainingIgnoreCaseOrOriginContainingOrderByEventsAsc(
           false,
           Enum.valueOf(Environment.class, environment),
           level,
@@ -188,6 +129,5 @@ public Page<Log> findByEnvironmentAndLevelOrDetailOrOriginOrderBy(String environ
   );
 	
 }
-
   
 }

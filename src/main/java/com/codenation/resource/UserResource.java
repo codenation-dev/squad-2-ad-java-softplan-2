@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
@@ -34,7 +35,7 @@ public class UserResource {
   @Autowired
   private RoleRepository roleRepository;
 
-  @GetMapping()
+  @GetMapping
   public List<UserDTO> findAll(){
     return userService.findAll();
   }
@@ -49,25 +50,25 @@ public class UserResource {
   }
 
   @PostMapping
-  public ResponseEntity<HttpEntity> create(@RequestBody @Valid UserDTO userDTO) throws UserAlreadyExistsException, SignUpException {
+  public ResponseEntity<UserDTO> create(@RequestBody @Valid UserDTO userDTO) throws UserAlreadyExistsException, SignUpException {
     List<String> erros = new ArrayList<>();
 
     AtomicReference<Boolean> flag = new AtomicReference<>(false);
     userService.findByEmail(userDTO.getEmail()).ifPresent(
-            item -> {
-              flag.set(true);
-            }
+            item ->
+              flag.set(true)
     );
 
-    if(flag.get()) throw new UserAlreadyExistsException();
+    if(flag.get().equals(true)) throw new UserAlreadyExistsException();
 
     User result = new User();
 
     roleRepository.findByNameIgnoreCase("USER").ifPresent(
-            role -> {
-              result.setRoles(Collections.singletonList(role));
-            }
+            role ->
+              result.setRoles(Collections.singletonList(role))
     );
+
+    userDTO.setName(StringUtils.trimWhitespace(userDTO.getName()));
 
     if(!userDTO.getPassword().matches("^(?=.*[A-Za-z])(?=.*\\d)[A-Za-z\\d]{8,}$"))
       erros.add("A senha deve possuir no minimo 8 caracteres, entre letras e numeros");
@@ -82,16 +83,16 @@ public class UserResource {
 
     userService.save(result);
 
-    return ResponseEntity.status(201).build();
+    return ResponseEntity.status(201).body(new UserDTO(result));
   }
 
   @PatchMapping("/{id}")
-  public ResponseEntity<HttpEntity> alterRole(@PathVariable Long id, @RequestBody @Valid Role role) throws UserNotFoundException, RoleNotFoundException {
+  public ResponseEntity<HttpEntity> alterRole(@PathVariable Long id, @RequestParam String role) throws UserNotFoundException, RoleNotFoundException {
 
     User user = userService.findUser(id)
             .orElseThrow(UserNotFoundException::new);
 
-    Role roleResult = roleRepository.findByNameIgnoreCase(role.getName())
+    Role roleResult = roleRepository.findByNameIgnoreCase(role)
             .orElseThrow(RoleNotFoundException::new);
 
     user.setRoles(Collections.singletonList(roleResult));

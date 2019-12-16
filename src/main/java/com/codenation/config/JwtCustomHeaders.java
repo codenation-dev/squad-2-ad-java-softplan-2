@@ -10,11 +10,10 @@ import org.springframework.security.oauth2.provider.token.store.JwtAccessTokenCo
 
 import java.security.KeyPair;
 import java.security.interfaces.RSAPrivateKey;
-import java.util.HashMap;
 import java.util.Map;
 
 public class JwtCustomHeaders extends JwtAccessTokenConverter {
-  private Map<String, String> customHeaders = new HashMap<>();
+  private Map<String, String> customHeaders;
   final RsaSigner signer;
   private JsonParser objectMapper = JsonParserFactory.create();
 

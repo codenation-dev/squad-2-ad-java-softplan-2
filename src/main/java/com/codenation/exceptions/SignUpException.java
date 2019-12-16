@@ -1,29 +1,29 @@
 package com.codenation.exceptions;
 
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-
 import java.util.ArrayList;
 import java.util.List;
 
-@Getter
-@NoArgsConstructor
+
 public class SignUpException extends Exception {
-  private String error ="problemas_no_cadastro";
-  private List<String> error_description;
+  private static final String ERROR ="problemas_no_cadastro";
+  private static final List<String> ERROR_DESCRIPTION = new ArrayList<>();
 
   public SignUpException(List<String> errors){
-    this.error_description = new ArrayList<>(errors);
+    ERROR_DESCRIPTION.addAll(errors);
   }
 
-  public String getError_description () {
+  public String getErrorDescription() {
     StringBuilder result = new StringBuilder();
 
-    error_description.forEach(
-            erro -> {
+    ERROR_DESCRIPTION.forEach(
+            erro ->
               result.append(erro)
-                      .append("\n ");
-            });
+                      .append("\n ")
+            );
     return result.toString();
+  }
+
+  public static String getError() {
+    return ERROR;
   }
 }

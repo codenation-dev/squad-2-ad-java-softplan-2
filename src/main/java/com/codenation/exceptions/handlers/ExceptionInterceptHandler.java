@@ -14,83 +14,83 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExcep
 public class ExceptionInterceptHandler extends ResponseEntityExceptionHandler {
 
   @ExceptionHandler(EmptyRequestException.class)
-  public final ResponseEntity<Object> handleEmptyRequestExceptions(EmptyRequestException ex) {
-    ExceptionDTO exception = new ExceptionDTO(ex.getError(), ex.getError_description());
-    return new ResponseEntity(exception, HttpStatus.BAD_REQUEST);
+  public final ResponseEntity<ExceptionSchema> handleEmptyRequestExceptions(EmptyRequestException ex) {
+    ExceptionSchema exception = new ExceptionSchema(EmptyRequestException.getError(), EmptyRequestException.getErrorDescription());
+    return new ResponseEntity<>(exception, HttpStatus.BAD_REQUEST);
   }
 
   @ExceptionHandler(InvalidLogException.class)
-  public final ResponseEntity<Object> handleInvalidLogExceptions(InvalidUserException ex) {
-    ExceptionDTO exception = new ExceptionDTO(ex.getError(), ex.getError_description());
-    return new ResponseEntity(exception, HttpStatus.BAD_REQUEST);
+  public final ResponseEntity<ExceptionSchema> handleInvalidLogExceptions(InvalidLogException ex) {
+    ExceptionSchema exception = new ExceptionSchema(InvalidLogException.getError(), InvalidLogException.getErrorDescription());
+    return new ResponseEntity<>(exception, HttpStatus.BAD_REQUEST);
   }
 
   @ExceptionHandler(InvalidUserException.class)
-  public final ResponseEntity<Object> handleInvalidUserExceptions(InvalidUserException ex) {
-    ExceptionDTO exception = new ExceptionDTO(ex.getError(), ex.getError_description());
-    return new ResponseEntity(exception, HttpStatus.BAD_REQUEST);
+  public final ResponseEntity<ExceptionSchema> handleInvalidUserExceptions(InvalidUserException ex) {
+    ExceptionSchema exception = new ExceptionSchema(InvalidUserException.getError(), InvalidUserException.getErrorDescription());
+    return new ResponseEntity<>(exception, HttpStatus.BAD_REQUEST);
   }
 
   @ExceptionHandler(LogNotFoundException.class)
-  public final ResponseEntity<Object> handleLogNotFoundExceptions(LogNotFoundException ex) {
-    ExceptionDTO exception = new ExceptionDTO(ex.getError(), ex.getError_description());
-    return new ResponseEntity(exception, HttpStatus.BAD_REQUEST);
+  public final ResponseEntity<ExceptionSchema> handleLogNotFoundExceptions(LogNotFoundException ex) {
+    ExceptionSchema exception = new ExceptionSchema(LogNotFoundException.getError(), LogNotFoundException.getErrorDescription());
+    return new ResponseEntity<>(exception, HttpStatus.BAD_REQUEST);
   }
 
   @ExceptionHandler(UserNotFoundException.class)
-  public final ResponseEntity<Object> handleUserNotFoundExceptions(UserNotFoundException ex) {
-    ExceptionDTO exception = new ExceptionDTO(ex.getError(), ex.getError_description());
-    return new ResponseEntity(exception, HttpStatus.BAD_REQUEST);
+  public final ResponseEntity<ExceptionSchema> handleUserNotFoundExceptions(UserNotFoundException ex) {
+    ExceptionSchema exception = new ExceptionSchema(UserNotFoundException.getError(), UserNotFoundException.getErrorDescription());
+    return new ResponseEntity<>(exception, HttpStatus.BAD_REQUEST);
   }
 
   @ExceptionHandler(RoleNotFoundException.class)
-  public final ResponseEntity<Object> handleRoleNotFoundExceptions(RoleNotFoundException ex) {
-    ExceptionDTO exception = new ExceptionDTO(ex.getError(), ex.getError_description());
-    return new ResponseEntity(exception, HttpStatus.BAD_REQUEST);
+  public final ResponseEntity<ExceptionSchema> handleRoleNotFoundExceptions(RoleNotFoundException ex) {
+    ExceptionSchema exception = new ExceptionSchema(RoleNotFoundException.getError(), RoleNotFoundException.getErrorDescription());
+    return new ResponseEntity<>(exception, HttpStatus.BAD_REQUEST);
   }
 
   @ExceptionHandler(UserNotPermittedException.class)
-  public final ResponseEntity<Object> handleUserNotPermittedExceptions(UserNotPermittedException ex) {
-    ExceptionDTO exception = new ExceptionDTO(ex.getError(), ex.getError_description());
-    return new ResponseEntity(exception, HttpStatus.BAD_REQUEST);
+  public final ResponseEntity<ExceptionSchema> handleUserNotPermittedExceptions(UserNotPermittedException ex) {
+    ExceptionSchema exception = new ExceptionSchema(UserNotPermittedException.getError(), UserNotPermittedException.getErrorDescription());
+    return new ResponseEntity<>(exception, HttpStatus.BAD_REQUEST);
   }
 
   @ExceptionHandler(ForgotPasswordUnderConstructionException.class)
-  public final ResponseEntity<Object> handleForgotPasswordUnderConstructionExceptions(ForgotPasswordUnderConstructionException ex) {
-    ExceptionDTO exception = new ExceptionDTO(ex.getError(), ex.getError_description());
-    return new ResponseEntity(exception, HttpStatus.NOT_IMPLEMENTED);
+  public final ResponseEntity<ExceptionSchema> handleForgotPasswordUnderConstructionExceptions(ForgotPasswordUnderConstructionException ex) {
+    ExceptionSchema exception = new ExceptionSchema(ForgotPasswordUnderConstructionException.getError(), ForgotPasswordUnderConstructionException.getErrorDescription());
+    return new ResponseEntity<>(exception, HttpStatus.NOT_IMPLEMENTED);
   }
 
   @ExceptionHandler(UserAlreadyExistsException.class)
-  public final ResponseEntity<Object> handleUserAlreadyExistsExceptions(UserAlreadyExistsException ex) {
-    ExceptionDTO exception = new ExceptionDTO(ex.getError(), ex.getError_description());
-    return new ResponseEntity(exception, HttpStatus.BAD_REQUEST);
+  public final ResponseEntity<ExceptionSchema> handleUserAlreadyExistsExceptions(UserAlreadyExistsException ex) {
+    ExceptionSchema exception = new ExceptionSchema(UserAlreadyExistsException.getError(), UserAlreadyExistsException.getErrorDescription());
+    return new ResponseEntity<>(exception, HttpStatus.BAD_REQUEST);
   }
 
   @ExceptionHandler(SignUpException.class)
-  public final ResponseEntity<Object> handleUserAlreadyExistsExceptions(SignUpException ex) {
-    ExceptionDTO exception = new ExceptionDTO(ex.getError(), ex.getError_description());
-    return new ResponseEntity(exception, HttpStatus.BAD_REQUEST);
+  public final ResponseEntity<ExceptionSchema> handleUserAlreadyExistsExceptions(SignUpException ex) {
+    ExceptionSchema exception = new ExceptionSchema(SignUpException.getError(), ex.getErrorDescription());
+    return new ResponseEntity<>(exception, HttpStatus.BAD_REQUEST);
   }
 
   @ExceptionHandler(MainPageException.class)
-  public final ResponseEntity<Object> handleMainPageExceptions(MainPageException ex) {
-    ExceptionDTO exception = new ExceptionDTO(ex.getError(), ex.getError_description());
-    return new ResponseEntity(exception, HttpStatus.OK);
+  public final ResponseEntity<ExceptionSchema> handleMainPageExceptions(MainPageException ex) {
+    ExceptionSchema exception = new ExceptionSchema(MainPageException.getError(), MainPageException.getErrorDescription());
+    return new ResponseEntity<>(exception, HttpStatus.OK);
   }
 
 
   @Override
-  public final ResponseEntity<Object> handleMethodArgumentNotValid(MethodArgumentNotValidException ex, HttpHeaders headers, HttpStatus status, WebRequest request) {
-    ExceptionDTO exception = new ExceptionDTO("requisicao_invalida", "A validacao de dados falhou, verifique sua requisicao");
-    return new ResponseEntity(exception, HttpStatus.BAD_REQUEST);
+  public final ResponseEntity handleMethodArgumentNotValid(MethodArgumentNotValidException ex, HttpHeaders headers, HttpStatus status, WebRequest request) {
+    ExceptionSchema exception = new ExceptionSchema("requisicao_invalida", "A validacao de dados falhou, verifique sua requisicao");
+    return new ResponseEntity<>(exception, HttpStatus.BAD_REQUEST);
   }
 
 
   @ExceptionHandler(NotFoundException.class)
-  public ResponseEntity<Object> requestHandlingNoHandlerFound(NotFoundException ex) {
-    ExceptionDTO exception = new ExceptionDTO(ex.getError(), ex.getError_description());
-    return new ResponseEntity(exception, HttpStatus.NOT_FOUND);
+  public ResponseEntity<ExceptionSchema> requestHandlingNoHandlerFound(NotFoundException ex) {
+    ExceptionSchema exception = new ExceptionSchema(NotFoundException.getError(), NotFoundException.getErrorDescription());
+    return new ResponseEntity<>(exception, HttpStatus.NOT_FOUND);
   }
 
 
