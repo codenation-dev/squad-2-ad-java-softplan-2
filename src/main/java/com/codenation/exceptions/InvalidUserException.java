@@ -8,8 +8,8 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 public class InvalidUserException extends Exception {
-  private String error;
-  private String error_description;
+  private String error ="usuario_invalido";
+  private String error_description = "Os dados de usuario sao invalidos, por favor, verifique";
 
   public InvalidUserException(
           String error, String error_description) {

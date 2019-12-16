@@ -8,8 +8,8 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 public class InvalidLogException extends Exception {
-  private String error;
-  private String error_description;
+  private String error = "log_invalido";
+  private String error_description = "Os dados do log informado sao invalidos, por favor, verifique";
 
   public InvalidLogException(
           String error, String error_description) {

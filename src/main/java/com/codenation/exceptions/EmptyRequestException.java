@@ -8,8 +8,13 @@ import lombok.Setter;
 @Getter
 @Setter
 @NoArgsConstructor
-@AllArgsConstructor
 public class EmptyRequestException extends Exception {
   private String error = "resquisicao_nula";
   private String error_description = "A requisicao esta vazia ou contem dados invalidos";
+
+  public EmptyRequestException(
+          String error, String error_description) {
+    this.error = error;
+    this.error_description = error_description;
+  }
 }

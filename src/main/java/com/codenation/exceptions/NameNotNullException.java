@@ -9,8 +9,8 @@ import lombok.Setter;
 @NoArgsConstructor
 public class NameNotNullException extends Exception {
 
-  private String error;
-  private String error_description;
+  private String error = "nome_nulo";
+  private String error_description = "O nome informado é nulo ou invalido";
 
   public NameNotNullException(String error, String error_description) {
     this.error = error;
