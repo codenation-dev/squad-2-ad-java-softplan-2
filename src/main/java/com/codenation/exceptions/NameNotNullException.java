@@ -9,8 +9,8 @@ import lombok.Setter;
 @NoArgsConstructor
 public class NameNotNullException extends Exception {
 
-  private String error = "nome_nulo";
-  private String error_description = "O nome informado é nulo ou invalido";
+  private String error = "nome_nulo_ou_curto";
+  private String error_description = "O nome deve conter no minimo 5 caracteres";
 
   public NameNotNullException(String error, String error_description) {
     this.error = error;

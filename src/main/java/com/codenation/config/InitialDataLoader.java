@@ -56,7 +56,7 @@ public class InitialDataLoader implements
     Authority alterUserPrivilege
             = createPrivilegeIfNotFound("ALTER_USER");
 
-    List<Authority> adminPrivileges = Arrays.asList(
+    List<Authority> adminPrivileges = new ArrayList<>(Arrays.asList(
             readPrivilege,
             writePrivilege,
             storePrivilege,
@@ -64,18 +64,18 @@ public class InitialDataLoader implements
             stagePrivilege,
             productionPrivilege,
             createUserPrivilege,
-            alterUserPrivilege);
+            alterUserPrivilege));
 
 
-    createRoleIfNotFound("USER", Collections.singletonList(readPrivilege));
+    createRoleIfNotFound("USER", new ArrayList<>(Collections.singletonList(readPrivilege)));
 
-    createRoleIfNotFound("LOGGER", Collections.singletonList(writePrivilege));
+    createRoleIfNotFound("LOGGER", new ArrayList<>(Collections.singletonList(writePrivilege)));
 
-    createRoleIfNotFound("DEV", Arrays.asList(readPrivilege, developPrivilege));
+    createRoleIfNotFound("DEV", new ArrayList<>(Arrays.asList(readPrivilege, developPrivilege)));
 
-    createRoleIfNotFound("STAGE", Arrays.asList(readPrivilege, stagePrivilege));
+    createRoleIfNotFound("STAGE", new ArrayList<>(Arrays.asList(readPrivilege, stagePrivilege)));
 
-    createRoleIfNotFound("PRODUCTION", Arrays.asList(readPrivilege, productionPrivilege));
+    createRoleIfNotFound("PRODUCTION", new ArrayList<>(Arrays.asList(readPrivilege, productionPrivilege)));
 
     Role adminRole = createRoleIfNotFound("ADMIN", adminPrivileges);
 
@@ -83,7 +83,7 @@ public class InitialDataLoader implements
     user.setName("Administrator");
     user.setPassword(passwordEncoder.encode("secret"));
     user.setEmail("admin@admin.com");
-    user.setRoles(Collections.singletonList(adminRole));
+    user.setRoles(new ArrayList<>(Collections.singletonList(adminRole)));
     userRepository.save(user);
 
     alreadySetup = true;

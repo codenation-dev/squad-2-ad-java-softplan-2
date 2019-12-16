@@ -50,6 +50,30 @@ public class ExceptionInterceptHandler extends ResponseEntityExceptionHandler {
     return new ResponseEntity(exception, HttpStatus.BAD_REQUEST);
   }
 
+  @ExceptionHandler(UserNotPermittedException.class)
+  public final ResponseEntity<Object> handleUserNotPermittedExceptions(UserNotPermittedException ex) {
+    ExceptionDTO exception = new ExceptionDTO(ex.getError(), ex.getError_description());
+    return new ResponseEntity(exception, HttpStatus.BAD_REQUEST);
+  }
+
+  @ExceptionHandler(ForgotPasswordUnderConstructionException.class)
+  public final ResponseEntity<Object> handleForgotPasswordUnderConstructionExceptions(ForgotPasswordUnderConstructionException ex) {
+    ExceptionDTO exception = new ExceptionDTO(ex.getError(), ex.getError_description());
+    return new ResponseEntity(exception, HttpStatus.I_AM_A_TEAPOT);
+  }
+
+  @ExceptionHandler(UserAlreadyExistsException.class)
+  public final ResponseEntity<Object> handleUserAlreadyExistsExceptions(UserAlreadyExistsException ex) {
+    ExceptionDTO exception = new ExceptionDTO(ex.getError(), ex.getError_description());
+    return new ResponseEntity(exception, HttpStatus.BAD_REQUEST);
+  }
+
+  @ExceptionHandler(SignUpException.class)
+  public final ResponseEntity<Object> handleUserAlreadyExistsExceptions(SignUpException ex) {
+    ExceptionDTO exception = new ExceptionDTO(ex.getError(), ex.getError_description());
+    return new ResponseEntity(exception, HttpStatus.BAD_REQUEST);
+  }
+
   @Override
   public final ResponseEntity<Object> handleMethodArgumentNotValid(MethodArgumentNotValidException ex, HttpHeaders headers, HttpStatus status, WebRequest request) {
     ExceptionDTO exception = new ExceptionDTO("requisicao_invalida", "A validacao de dados falhou, verifique sua requisicao");

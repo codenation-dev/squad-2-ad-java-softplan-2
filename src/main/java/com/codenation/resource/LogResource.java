@@ -89,8 +89,10 @@ public class LogResource {
     if(!jwt.equals("NO TOKEN")) {jwt = jwt.substring(7);}
 
     Map<String, Object> jwtMap = new JWTParser().parseToken(jwt);
+    String emailHeader = (String)jwtMap.getOrDefault("user_name", "NO EMAIL SET");
 
-    AtomicReference<String> email = new AtomicReference<>((String)jwtMap.getOrDefault("user_name", "NO EMAIL SET"));
+    AtomicReference<String> email = new AtomicReference<>(emailHeader);
+
     userService.findByEmail(email.get()).ifPresent(
             user -> {
               email.set(user.getName());
