@@ -157,5 +157,18 @@ public class LogService {
     return result;
   }
 
+public Page<Log> findByEnvironmentAndLevelOrDetailOrOrigin(String environment, String level, String detail,
+		String origin, Pageable pageable) {
+	return logRepository.findByStoredAndEnvironmentOrLevelIgnoreCaseOrDetailOrOrigin(false, environment, level, detail, origin, pageable);
+	
+}
+
+public Page<Log> findByEnvironmentAndLevelOrDetailOrOriginOrderBy(String environment, String level, String detail,
+		String origin, String orderBy, Pageable pageable) {
+	return orderBy == "level" ? logRepository.findByStoredAndEnvironmentOrLevelIgnoreCaseOrDetailOrOriginOrderByLevelAsc(false, environment, level, detail, origin, pageable):
+		logRepository.findByStoredAndEnvironmentOrLevelIgnoreCaseOrDetailOrOriginOrderByEventsAsc(false, environment, level, detail, origin, pageable);
+	
+}
+
   
 }

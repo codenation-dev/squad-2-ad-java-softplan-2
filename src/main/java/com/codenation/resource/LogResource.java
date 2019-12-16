@@ -12,10 +12,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.validation.Valid;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicReference;
 
@@ -54,15 +56,19 @@ public class LogResource {
   }
 
   @GetMapping("/{environment}/search")
-  public Page<Log> searchByOriginOrLevel(
+  public Page<Log> searchBy(
           @PathVariable String environment,
-          @RequestParam String query,
-          @RequestParam(required = false) String origin,
           @RequestParam(required = false) String level,
           @RequestParam(required = false) String detail,
+          @RequestParam(required = false) String origin,
+          @RequestParam(required = false) String orderBy,
           Pageable pageable) {
 
-    return logService.findByOriginOrLevelOrDetail(origin, level, detail, Enum.valueOf(Environment.class, environment.toUpperCase()), pageable);
+	  return orderBy == null ?
+            logService.findByEnvironmentAndLevelOrDetailOrOrigin(environment, level, detail, origin, pageable) :
+		        logService.findByEnvironmentAndLevelOrDetailOrOriginOrderBy(environment, level, detail, origin, orderBy, pageable);
+
+
   }
 
 
@@ -79,6 +85,7 @@ public class LogResource {
     Map<String, String> headers = new WebUtils().getHeadersInfo(req);
 
     String jwt = headers.getOrDefault("authorization".toLowerCase(), "NO TOKEN");
+
     if(!jwt.equals("NO TOKEN")) {jwt = jwt.substring(7);}
 
     Map<String, Object> jwtMap = new JWTParser().parseToken(jwt);
