@@ -23,6 +23,7 @@ public class ResourceServerConfig extends ResourceServerConfigurerAdapter {
             .antMatchers("/swagger-ui.html").permitAll()
             .antMatchers("/oauth/token").permitAll()
             .antMatchers(HttpMethod.OPTIONS, "/**").permitAll()
+            .antMatchers(HttpMethod.POST,"/api/v1/user/forgot_password/**").permitAll()
             .antMatchers(HttpMethod.POST,"/api/v1/user/**").hasAnyAuthority("CREATE_USER")
             .antMatchers(HttpMethod.PATCH,"/api/v1/user/**").hasAnyAuthority("ALTER_USER")
             .antMatchers(HttpMethod.POST,"/api/v1/log/**").hasAnyAuthority("WRITE")
@@ -32,8 +33,7 @@ public class ResourceServerConfig extends ResourceServerConfigurerAdapter {
             .antMatchers("/api/v1/log/stage/**").hasAnyAuthority("STAGE")
             .antMatchers("/api/v1/log/production/**").hasAnyAuthority("PRODUCTION")
             .anyRequest().authenticated();
-    //http.cors().and().csrf().disable();
-    //    http.headers().frameOptions().disable();
-    http.csrf().disable().headers().frameOptions().sameOrigin().and().anonymous().and().httpBasic().disable();
+    http.cors().and().csrf().disable();
+    http.headers().frameOptions().disable();
   }
 }

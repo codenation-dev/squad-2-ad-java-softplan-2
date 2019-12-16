@@ -3,8 +3,7 @@ package com.codenation.resource;
 import com.codenation.dto.UserDTO;
 import com.codenation.entity.Role;
 import com.codenation.entity.User;
-import com.codenation.exceptions.RoleNotFoundException;
-import com.codenation.exceptions.UserNotFoundException;
+import com.codenation.exceptions.*;
 import com.codenation.repository.RoleRepository;
 import com.codenation.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,10 +12,13 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
+import java.util.concurrent.atomic.AtomicReference;
 
 
 @RestController
@@ -47,15 +49,32 @@ public class UserResource {
   }
 
   @PostMapping
-  public ResponseEntity<HttpEntity> create(@RequestBody @Valid UserDTO userDTO){
+  public ResponseEntity<HttpEntity> create(@RequestBody @Valid UserDTO userDTO) throws UserAlreadyExistsException, SignUpException {
+    List<String> erros = new ArrayList<>();
+
+    AtomicReference<Boolean> flag = new AtomicReference<>(false);
+    userService.findByEmail(userDTO.getEmail()).ifPresent(
+            item -> {
+              flag.set(true);
+            }
+    );
+
+    if(flag.get()) throw new UserAlreadyExistsException();
+
     User result = new User();
 
-    Optional<Role> roleOptional = roleRepository.findByNameIgnoreCase("USER");
+    roleRepository.findByNameIgnoreCase("USER").ifPresent(
+            role -> {
+              result.setRoles(Collections.singletonList(role));
+            }
+    );
 
-    if(roleOptional.isPresent()){
-      Role role = roleOptional.get();
-      result.setRoles(Collections.singletonList(role));
-    }
+    if(!userDTO.getPassword().matches("^(?=.*[A-Za-z])(?=.*\\d)[A-Za-z\\d]{8,}$"))
+      erros.add("A senha deve possuir no minimo 8 caracteres, entre letras e numeros");
+    if(userDTO.getName().length() < 3)
+      erros.add("O nome deve possuir pelo menos 3 caracteres");
+
+    if (!erros.isEmpty()) throw new SignUpException(erros);
 
     result.setName(userDTO.getName());
     result.setEmail(userDTO.getEmail());
@@ -79,6 +98,13 @@ public class UserResource {
 
     userService.save(user);
     return ResponseEntity.ok().build();
+  }
+
+  @PostMapping("/forgot_password")
+  public ResponseEntity<HttpEntity> forgotPassword(@RequestParam Long id, HttpServletRequest req) throws ForgotPasswordUnderConstructionException {
+
+    //Implementação da funcionalidade de recuperação de senha
+    throw new ForgotPasswordUnderConstructionException();
   }
 
 }

@@ -3,14 +3,18 @@ package com.codenation.service;
 import com.codenation.entity.Authority;
 import com.codenation.entity.Role;
 import com.codenation.entity.User;
+import com.codenation.exceptions.RoleNotFoundException;
+import com.codenation.exceptions.UserNotFoundException;
 import com.codenation.repository.RoleRepository;
 import com.codenation.repository.UserRepository;
+import lombok.SneakyThrows;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -32,22 +36,15 @@ public class CustomUserDetailsService implements UserDetailsService {
   @Autowired
   private RoleRepository roleRepository;
 
+  @SneakyThrows
   @Override
-  public UserDetails loadUserByUsername(String email) {
+  public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException{
 
-    Optional<User> userOptional = userRepository.findByEmail(email);
-    Optional<Role> roleOptional = roleRepository.findByNameIgnoreCase("USER");
+    User user = userRepository.findByEmail(email).orElseThrow(() -> {throw new UsernameNotFoundException("Usuario nao encontrado");});
 
-    if (!userOptional.isPresent()) {
-      return new org.springframework.security.core.userdetails.User(
-              " ", " ", true, true, true, true,
-              getAuthorities(Collections.singletonList(roleOptional.get())));
-    } else {
-      User user = userOptional.get();
-      return new org.springframework.security.core.userdetails.User(
-              user.getEmail(), user.getPassword(), true, true, true,
-              true, getAuthorities(user.getRoles()));
-    }
+    return new org.springframework.security.core.userdetails.User(
+            user.getEmail(), user.getPassword(), true, true, true,
+            true, getAuthorities(user.getRoles()));
   }
 
   private Collection<? extends GrantedAuthority> getAuthorities(

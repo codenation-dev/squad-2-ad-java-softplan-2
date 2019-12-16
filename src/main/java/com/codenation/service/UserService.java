@@ -37,7 +37,7 @@ public class UserService {
     return Optional.of(new UserDTO(user));
   }
 
-  public Optional<User> findUser (Long id) throws UserNotFoundException {
+  public Optional<User> findUser (Long id) {
     return userRepository.findById(id);
   }
 
