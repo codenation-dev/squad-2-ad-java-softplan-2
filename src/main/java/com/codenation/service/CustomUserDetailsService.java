@@ -3,8 +3,6 @@ package com.codenation.service;
 import com.codenation.entity.Authority;
 import com.codenation.entity.Role;
 import com.codenation.entity.User;
-import com.codenation.exceptions.RoleNotFoundException;
-import com.codenation.exceptions.UserNotFoundException;
 import com.codenation.repository.RoleRepository;
 import com.codenation.repository.UserRepository;
 import lombok.SneakyThrows;
@@ -18,7 +16,9 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
 
 @Service("userDetailsService")
 @Transactional

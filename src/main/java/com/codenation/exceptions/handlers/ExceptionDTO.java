@@ -7,7 +7,7 @@ import lombok.Setter;
 @AllArgsConstructor
 @Getter
 @Setter
-public class ExceptionDTO {
+public class ExceptionDTO{
   private String error;
   private String error_description;
 

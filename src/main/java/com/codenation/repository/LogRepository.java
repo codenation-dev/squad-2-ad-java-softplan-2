@@ -1,15 +1,13 @@
 package com.codenation.repository;
 
+import com.codenation.entity.Log;
 import com.codenation.enums.Environment;
 import com.codenation.enums.Level;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.repository.PagingAndSortingRepository;
-
-import com.codenation.entity.Log;
 import org.springframework.stereotype.Repository;
 
-import java.util.List;
 import java.util.Optional;
 
 @Repository

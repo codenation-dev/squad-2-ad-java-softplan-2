@@ -1,7 +1,6 @@
 package com.codenation.exceptions.handlers;
 
 import com.codenation.exceptions.*;
-import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -59,7 +58,7 @@ public class ExceptionInterceptHandler extends ResponseEntityExceptionHandler {
   @ExceptionHandler(ForgotPasswordUnderConstructionException.class)
   public final ResponseEntity<Object> handleForgotPasswordUnderConstructionExceptions(ForgotPasswordUnderConstructionException ex) {
     ExceptionDTO exception = new ExceptionDTO(ex.getError(), ex.getError_description());
-    return new ResponseEntity(exception, HttpStatus.I_AM_A_TEAPOT);
+    return new ResponseEntity(exception, HttpStatus.NOT_IMPLEMENTED);
   }
 
   @ExceptionHandler(UserAlreadyExistsException.class)
@@ -74,10 +73,25 @@ public class ExceptionInterceptHandler extends ResponseEntityExceptionHandler {
     return new ResponseEntity(exception, HttpStatus.BAD_REQUEST);
   }
 
+  @ExceptionHandler(MainPageException.class)
+  public final ResponseEntity<Object> handleMainPageExceptions(MainPageException ex) {
+    ExceptionDTO exception = new ExceptionDTO(ex.getError(), ex.getError_description());
+    return new ResponseEntity(exception, HttpStatus.OK);
+  }
+
+
   @Override
   public final ResponseEntity<Object> handleMethodArgumentNotValid(MethodArgumentNotValidException ex, HttpHeaders headers, HttpStatus status, WebRequest request) {
     ExceptionDTO exception = new ExceptionDTO("requisicao_invalida", "A validacao de dados falhou, verifique sua requisicao");
     return new ResponseEntity(exception, HttpStatus.BAD_REQUEST);
   }
+
+
+  @ExceptionHandler(NotFoundException.class)
+  public ResponseEntity<Object> requestHandlingNoHandlerFound(NotFoundException ex) {
+    ExceptionDTO exception = new ExceptionDTO(ex.getError(), ex.getError_description());
+    return new ResponseEntity(exception, HttpStatus.NOT_FOUND);
+  }
+
 
 }
