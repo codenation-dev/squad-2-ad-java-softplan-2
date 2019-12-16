@@ -7,6 +7,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.CreationTimestamp;
+import org.springframework.util.StringUtils;
 
 import java.util.Date;
 import java.util.Objects;
@@ -65,13 +66,20 @@ public class Log {
 		}
 		Log other = (Log) obj;
 		return Objects.equals(detail, other.detail)
-				&& Objects.equals(generatedBy, other.generatedBy)
-				&& Objects.equals(level, other.level) && Objects.equals(origin, other.origin)
-				&& Objects.equals(title, other.title);
+						&& Objects.equals(generatedBy, other.generatedBy)
+						&& Objects.equals(level, other.level)
+						&& Objects.equals(origin, other.origin)
+						&& Objects.equals(title, other.title);
 	}
 
 	public int hashCode() {
-		return Objects.hash(id, title, level, detail, createdAt, origin, token, generatedBy, environment, stored, events);
+		return Objects.hash(id, title, level, detail, createdAt, origin, generatedBy, environment, stored, events);
+	}
 
+	public boolean isValid(){
+		return !StringUtils.isEmpty(this.detail)
+						&& !StringUtils.isEmpty(this.title)
+						&& !StringUtils.isEmpty(this.level)
+						&& !StringUtils.isEmpty(this.environment);
 	}
 }

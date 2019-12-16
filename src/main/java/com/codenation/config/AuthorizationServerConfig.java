@@ -41,7 +41,6 @@ public class AuthorizationServerConfig extends WebSecurityConfigurerAdapter {
     return PasswordEncoderFactories.createDelegatingPasswordEncoder();
   }
 
-  //Swagger UI bypass
   @Override
   public void configure(WebSecurity web) throws Exception {
     web.ignoring().antMatchers("/v2/api-docs",
