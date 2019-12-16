@@ -44,15 +44,19 @@ public class LogResource {
   }
 
   @GetMapping("/{environment}/search")
-  public Page<Log> searchByOriginOrLevel(
+  public Page<Log> searchBy(
           @PathVariable String environment,
-          @RequestParam(required = false) String origin,
           @RequestParam(required = false) String level,
+          @RequestParam(required = false) String detail,
+          @RequestParam(required = false) String origin,
+          @RequestParam(required = false) String orderBy,
           Pageable pageable) {
+	  return orderBy == null ?  logService.findByEnvironmentAndLevelOrDetailOrOrigin(environment, level, detail, origin, pageable) :
+		   logService.findByEnvironmentAndLevelOrDetailOrOriginOrderBy(environment, level, detail, origin, orderBy, pageable);
 
-    return logService.findByOriginOrLevel(origin, level, environment, pageable);
+   
   }
-
+  
 
   @PostMapping
   public ResponseEntity<HttpEntity> create(@RequestBody @Valid List<Log> logs, HttpServletRequest req){
