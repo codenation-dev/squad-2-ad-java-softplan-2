@@ -108,7 +108,7 @@ public class InitialDataLoader implements
           String name, Collection<Authority> privileges) {
 
     Role role;
-    Optional<Role> roleOptional = roleRepository.findByName(name);
+    Optional<Role> roleOptional = roleRepository.findByNameIgnoreCase(name);
     if (!roleOptional.isPresent()) {
       role = new Role(name);
       role.setAuthorities(privileges);

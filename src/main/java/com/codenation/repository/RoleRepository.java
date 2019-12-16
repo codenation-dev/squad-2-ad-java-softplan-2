@@ -10,5 +10,6 @@ import java.util.Optional;
 public interface RoleRepository extends CrudRepository<Role, Long> {
 	@Override
 	void delete(Role role);
-	Optional<Role> findByName(String name);
+
+	Optional<Role> findByNameIgnoreCase(String name);
 }

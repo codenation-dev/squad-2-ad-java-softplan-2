@@ -37,6 +37,10 @@ public class UserService {
     return Optional.of(new UserDTO(user));
   }
 
+  public Optional<User> findUser (Long id) throws UserNotFoundException {
+    return userRepository.findById(id);
+  }
+
   public void save(User user){
     userRepository.save(user);
   }

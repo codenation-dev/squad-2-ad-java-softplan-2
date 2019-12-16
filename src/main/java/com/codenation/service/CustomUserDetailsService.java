@@ -36,7 +36,7 @@ public class CustomUserDetailsService implements UserDetailsService {
   public UserDetails loadUserByUsername(String email) {
 
     Optional<User> userOptional = userRepository.findByEmail(email);
-    Optional<Role> roleOptional = roleRepository.findByName("USER");
+    Optional<Role> roleOptional = roleRepository.findByNameIgnoreCase("USER");
 
     if (!userOptional.isPresent()) {
       return new org.springframework.security.core.userdetails.User(

@@ -8,8 +8,8 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 public class RoleNotFoundException extends Exception {
-  private String error = "usuario_nao_encontrado";
-  private String error_description = "O usuário nao foi encontrado. Pode ter sido movido ou excluido";
+  private String error = "role_nao_encontrada";
+  private String error_description = "A role informada nao foi encontrada";
 
   public RoleNotFoundException(
           String error, String error_description) {

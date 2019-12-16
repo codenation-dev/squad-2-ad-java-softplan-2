@@ -20,7 +20,7 @@ import java.util.*;
 @Table(name="application_user")
 public class User implements Serializable {
 
-	private static final long serialVersionUID = 5447349252217756923L;
+	private static final long serialVersionUID = 8327398596591441079L;
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
@@ -42,9 +42,9 @@ public class User implements Serializable {
 									name = "user_id", referencedColumnName = "id"),
 					inverseJoinColumns = @JoinColumn(
 									name = "role_id", referencedColumnName = "id"))
-	private Collection<Role> roles;
+	private List<Role> roles;
 
-	public User(String name, String email, String password, Collection<Role> roles) {
+	public User(String name, String email, String password, List<Role> roles) {
 		this.name = name;
 		this.email = email;
 		this.password = password;
@@ -68,6 +68,10 @@ public class User implements Serializable {
 		List<GrantedAuthority> authorities = new ArrayList();
 		roles.forEach(role -> authorities.addAll(role.getAuthorities()));
 		return authorities;
+	}
+
+	public void setRoles (List<Role> roles){
+		this.roles = new ArrayList<>(roles);
 	}
 
 

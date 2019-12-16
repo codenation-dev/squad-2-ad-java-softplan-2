@@ -14,7 +14,6 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
@@ -42,18 +41,16 @@ public class UserResource {
   public UserDTO findById(@PathVariable Long id) throws UserNotFoundException {
     Optional<UserDTO> userOptional = userService.findById(id);
 
-    if(userOptional.isPresent()) {
-      User user = new User(userOptional.get());
-      return new UserDTO(user);
-    }
-    throw new UserNotFoundException();
+    if(!userOptional.isPresent()) throw new UserNotFoundException();
+
+    return userOptional.get();
   }
 
   @PostMapping
   public ResponseEntity<HttpEntity> create(@RequestBody @Valid UserDTO userDTO){
     User result = new User();
 
-    Optional<Role> roleOptional = roleRepository.findByName("USER");
+    Optional<Role> roleOptional = roleRepository.findByNameIgnoreCase("USER");
 
     if(roleOptional.isPresent()){
       Role role = roleOptional.get();
@@ -70,16 +67,13 @@ public class UserResource {
   }
 
   @PatchMapping("/{id}")
-  public ResponseEntity<HttpEntity> alterRole(@PathVariable Long id, @RequestBody String role) throws UserNotFoundException, RoleNotFoundException {
-    Role roleResult;
-    Optional<UserDTO> userOptional = userService.findById(id);
-    Optional<Role> roleOptional = roleRepository.findByName(role);
+  public ResponseEntity<HttpEntity> alterRole(@PathVariable Long id, @RequestBody @Valid Role role) throws UserNotFoundException, RoleNotFoundException {
 
-    if(!userOptional.isPresent()) throw new UserNotFoundException();
-    if(!roleOptional.isPresent()) throw new RoleNotFoundException();
+    User user = userService.findUser(id)
+            .orElseThrow(UserNotFoundException::new);
 
-    User user = new User(userOptional.get());
-    roleResult = roleOptional.get();
+    Role roleResult = roleRepository.findByNameIgnoreCase(role.getName())
+            .orElseThrow(RoleNotFoundException::new);
 
     user.setRoles(Collections.singletonList(roleResult));
 

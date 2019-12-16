@@ -15,6 +15,7 @@ import javax.persistence.OneToMany;
 import javax.transaction.Transactional;
 import javax.validation.constraints.Null;
 import java.util.Collection;
+import java.util.List;
 
 @Builder
 @Data
@@ -31,7 +32,7 @@ public class UserDTO implements UserDetails {
   private String password;
   @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
   private Collection<GrantedAuthority> authorities;
-  private Collection<Role> roles;
+  private List<Role> roles;
 
   public UserDTO(User user) {
     this.id = user.getId();
