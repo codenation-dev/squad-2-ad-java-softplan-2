@@ -80,7 +80,7 @@ public class LogsForTests {
     public static Log F() {
         Log result = new Log();
 
-        result.setTitle("Título D");
+        result.setTitle("Título F");
         result.setDetail("Detalhe D");
         result.setOrigin("127.0.0.6");
         result.setGeneratedBy("email3@email");
@@ -110,7 +110,7 @@ public class LogsForTests {
     public static Log H() {
         Log result = new Log();
 
-        result.setTitle("Título D");
+        result.setTitle("Título H");
         result.setDetail("CasEInSenSiTiVe");
         result.setOrigin("");
         result.setGeneratedBy("admin4@email.com");
@@ -125,7 +125,7 @@ public class LogsForTests {
     public static Log I() {
         Log result = new Log();
 
-        result.setTitle("Título D");
+        result.setTitle("Título I");
         result.setDetail("Detalhe D");
         result.setOrigin("127.0.0.1");
         result.setGeneratedBy("email5@email.com");
@@ -140,7 +140,7 @@ public class LogsForTests {
     public static Log J() {
         Log result = new Log();
 
-        result.setTitle("Título D");
+        result.setTitle("Título J");
         result.setDetail("Detalhe D");
         result.setOrigin("127.0.0.1");
         result.setGeneratedBy("email6@email.com");
@@ -155,7 +155,7 @@ public class LogsForTests {
     public static Log K() {
         Log result = new Log();
 
-        result.setTitle("Título D");
+        result.setTitle("Título K");
         result.setDetail("Detalhe D");
         result.setOrigin("127.0.0.1");
         result.setGeneratedBy("email@email.com");
