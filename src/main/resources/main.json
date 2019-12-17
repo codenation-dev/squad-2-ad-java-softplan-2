@@ -1,0 +1,9 @@
+{
+  "welcome": "Bem vindo ao ZOOMLOG!",
+  "message": "Para comecar, visite o nosso repositorio no GitHub https://github.com/codenation-dev/squad-2-ad-java-softplan-2 ou acesse os links",
+  "_links": [{
+    "autenticacao": "/oauth/token",
+    "documentacao": "/swagger-ui.html",
+    "github": "https://github.com/codenation-dev/squad-2-ad-java-softplan-2"
+  }]
+}

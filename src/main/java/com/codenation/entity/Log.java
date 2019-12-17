@@ -1,117 +1,75 @@
 package com.codenation.entity;
 
-import java.sql.Date;
+import com.codenation.enums.Environment;
+import com.codenation.enums.Level;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+import org.hibernate.annotations.CreationTimestamp;
+import org.springframework.util.StringUtils;
+
+import javax.persistence.*;
+import java.util.Date;
+import java.util.HashMap;
 import java.util.Objects;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.ManyToOne;
-
 @Entity
+@Data
+@AllArgsConstructor
+@NoArgsConstructor
+@Builder
 public class Log {
 	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@GeneratedValue(strategy = GenerationType.AUTO)
 	private Long id;
+
+	@Column(nullable = false)
 	private String title;
-	private String level;
+
+	@Column(nullable = false)
+	@Enumerated(EnumType.STRING)
+	private Level level;
+
+	@Column(nullable = false, columnDefinition="TEXT")
 	private String detail;
+
+	@CreationTimestamp
 	private Date createdAt;
+
+	@Column(nullable = false)
 	private String origin;
-	@ManyToOne
-	private User generatedBy;
-	
-	
-	
-	/**
-	 * @return the id
-	 */
-	public Long getId() {
-		return id;
-	}
-	/**
-	 * @param id the id to set
-	 */
-	public void setId(Long id) {
-		this.id = id;
-	}
-	/**
-	 * @return the title
-	 */
-	public String getTitle() {
-		return title;
-	}
-	/**
-	 * @param title the title to set
-	 */
-	public void setTitle(String title) {
+
+	@Column(length = 350)
+	private String token;
+
+	@Column(nullable = false)
+	private String generatedBy;
+
+	@Column(nullable = false)
+	@Enumerated(EnumType.STRING)
+	private Environment environment;
+
+	private Boolean stored = false;
+
+	private HashMap<Date, String> events;
+
+	private Integer eventOccurrences = 0;
+
+	public Log(String title, Level level, String detail, Date createdAt, String origin, String token, String generatedBy, Environment environment, Boolean stored) {
 		this.title = title;
-	}
-	/**
-	 * @return the level
-	 */
-	public String getLevel() {
-		return level;
-	}
-	/**
-	 * @param level the level to set
-	 */
-	public void setLevel(String level) {
 		this.level = level;
-	}
-	/**
-	 * @return the detail
-	 */
-	public String getDetail() {
-		return detail;
-	}
-	/**
-	 * @param detail the detail to set
-	 */
-	public void setDetail(String detail) {
 		this.detail = detail;
-	}
-	/**
-	 * @return the createdAt
-	 */
-	public Date getCreatedAt() {
-		return createdAt;
-	}
-	/**
-	 * @param createdAt the createdAt to set
-	 */
-	public void setCreatedAt(Date createdAt) {
 		this.createdAt = createdAt;
-	}
-	/**
-	 * @return the origin
-	 */
-	public String getOrigin() {
-		return origin;
-	}
-	/**
-	 * @param origin the origin to set
-	 */
-	public void setOrigin(String origin) {
 		this.origin = origin;
-	}
-	/**
-	 * @return the generatedBy
-	 */
-	public User getGeneratedBy() {
-		return generatedBy;
-	}
-	/**
-	 * @param generatedBy the generatedBy to set
-	 */
-	public void setGeneratedBy(User generatedBy) {
+		this.token = token;
 		this.generatedBy = generatedBy;
+		this.environment = environment;
+		this.stored = stored;
+		this.events = new HashMap<>();
 	}
-	@Override
-	public int hashCode() {
-		return Objects.hash(createdAt, detail, generatedBy, id, level, origin, title);
-	}
+
 	@Override
 	public boolean equals(Object obj) {
 		if (this == obj) {
@@ -124,11 +82,26 @@ public class Log {
 			return false;
 		}
 		Log other = (Log) obj;
-		return Objects.equals(createdAt, other.createdAt) && Objects.equals(detail, other.detail)
-				&& Objects.equals(generatedBy, other.generatedBy) && id == other.id
-				&& Objects.equals(level, other.level) && Objects.equals(origin, other.origin)
-				&& Objects.equals(title, other.title);
+		return Objects.equals(detail, other.detail)
+						&& Objects.equals(generatedBy, other.generatedBy)
+						&& Objects.equals(level, other.level)
+						&& Objects.equals(origin, other.origin)
+						&& Objects.equals(title, other.title);
 	}
-	
 
+	public void addEvent(String email, Date data){
+		events.put(data, email);
+		eventOccurrences++;
+	}
+
+	public int hashCode() {
+		return Objects.hash(id, title, level, detail, createdAt, origin, generatedBy, environment, stored, events);
+	}
+
+	public boolean isValid(){
+		return !StringUtils.isEmpty(this.detail)
+						&& !StringUtils.isEmpty(this.title)
+						&& !StringUtils.isEmpty(this.level)
+						&& !StringUtils.isEmpty(this.environment);
+	}
 }
