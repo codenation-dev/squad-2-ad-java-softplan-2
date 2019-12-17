@@ -205,9 +205,7 @@ public class LogTests {
 
         System.out.println(getResponseString);
 
-//        cleanDB(
-//                Arrays.asList(log)
-//        );
+        cleanDB();
     }
 
     @Test
@@ -276,6 +274,49 @@ public class LogTests {
 
         cleanDB();
     }
+
+    @Test
+    void deleteById() throws IOException {
+        List<Log> logList = new ArrayList<>();
+        logList.add(LogsForTests.A());
+        logList.add(LogsForTests.B());
+        logList.add(LogsForTests.C());
+        logList.add(LogsForTests.D());
+        logList.add(LogsForTests.E());
+        logList.add(LogsForTests.F());
+        logList.add(LogsForTests.G());
+        logList.add(LogsForTests.H());
+        logList.add(LogsForTests.I());
+        logList.add(LogsForTests.J());
+        logList.add(LogsForTests.K());
+
+        saveListofLogsInDB(logList);
+
+
+        List<Log> logsInDBList = logService.findAll(null).getContent();
+        Long idToDel = logsInDBList.get(0).getId();
+
+        CloseableHttpClient httpClient = HttpClients.createDefault();
+        HttpDelete httpDel = new HttpDelete("http://localhost:8080/api/v1/log/" + idToDel);
+
+        token = this.token;
+        httpDel.addHeader(HttpHeaders.CONTENT_TYPE, "application/json");
+        httpDel.addHeader(HttpHeaders.AUTHORIZATION, "Bearer " + token);
+
+        CloseableHttpResponse httpDelResponse = httpClient.execute(httpDel);
+
+        httpDelResponse.close();
+
+        List<Log> remainingLogList = logService.findAll(null).getContent();
+
+        List<Long> idsList = remainingLogList.stream().map(el -> el.getId()).collect(Collectors.toList());
+
+        assertThat(idsList.contains(idToDel)).isEqualTo(false);
+
+        cleanDB();
+    }
+
+
 
 
 }
