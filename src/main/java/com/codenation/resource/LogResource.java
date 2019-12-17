@@ -2,6 +2,7 @@ package com.codenation.resource;
 
 import com.codenation.entity.Log;
 import com.codenation.enums.Environment;
+import com.codenation.enums.Level;
 import com.codenation.exceptions.EmptyRequestException;
 import com.codenation.exceptions.LogNotFoundException;
 import com.codenation.service.LogService;
@@ -16,6 +17,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.validation.Valid;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicReference;
 
@@ -39,7 +41,7 @@ public class LogResource {
                                      @RequestParam(required = false) String level,
                                      Pageable pageable) {
 		if(level != null) {
-			return logService.findByEnvironmentAndLevel(Enum.valueOf(Environment.class, environment.toUpperCase()),level, pageable);
+			return logService.findByEnvironmentAndLevel(Enum.valueOf(Environment.class, environment.toUpperCase()), level, pageable);
 		}
 		return logService.findByEnvironment(Enum.valueOf(Environment.class, environment.toUpperCase()), pageable);
 	}
@@ -80,7 +82,7 @@ public class LogResource {
 
     Map<String, String> headers = new WebUtils().getHeadersInfo(req);
 
-    String jwt = headers.getOrDefault("authorization".toLowerCase(), "NO TOKEN");
+    String jwt = headers.getOrDefault("authorization", "NO TOKEN");
 
     if(!jwt.equals("NO TOKEN")) {jwt = jwt.substring(7);}
 
