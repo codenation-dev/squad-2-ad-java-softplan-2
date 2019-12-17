@@ -1,9 +1,12 @@
 package com.codenation.resource;
 
+import com.codenation.dto.LogDTO;
 import com.codenation.entity.Log;
 import com.codenation.enums.Environment;
 import com.codenation.enums.Level;
 import com.codenation.exceptions.EmptyRequestException;
+import com.codenation.exceptions.EnvironmentNotFoundException;
+import com.codenation.exceptions.LevelNotFoundException;
 import com.codenation.exceptions.LogNotFoundException;
 import com.codenation.service.LogService;
 import com.codenation.service.UserService;
@@ -14,11 +17,14 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.ResponseEntity;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.validation.Valid;
-import java.util.*;
+import java.util.Date;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 import java.util.concurrent.atomic.AtomicReference;
 
 @RestController
@@ -39,11 +45,27 @@ public class LogResource {
   @GetMapping("/{environment}")
 	public Page<Log> findByEnvironment(@PathVariable String environment,
                                      @RequestParam(required = false) String level,
-                                     Pageable pageable) {
+                                     Pageable pageable) throws LevelNotFoundException, EnvironmentNotFoundException {
+    Environment environmentLocal = Environment.DEVELOPMENT;
+    try {
+      if (!StringUtils.isEmpty(environment))
+        environmentLocal = Environment.valueOf(environment.toUpperCase());
+    }catch(IllegalArgumentException e){
+      throw new EnvironmentNotFoundException();
+    }
+
+    Level levelLocal = Level.DEBUG;
+    try {
+      if (!StringUtils.isEmpty(level))
+        levelLocal = Level.valueOf(level.toUpperCase());
+    }catch(IllegalArgumentException e){
+      throw new LevelNotFoundException();
+    }
+
 		if(level != null) {
-			return logService.findByEnvironmentAndLevel(Enum.valueOf(Environment.class, environment.toUpperCase()), level, pageable);
+			return logService.findByEnvironmentAndLevel(environmentLocal, levelLocal, pageable);
 		}
-		return logService.findByEnvironment(Enum.valueOf(Environment.class, environment.toUpperCase()), pageable);
+		return logService.findByEnvironment(environmentLocal, pageable);
 	}
 
   @GetMapping("/{environment}/{id}")
@@ -62,30 +84,68 @@ public class LogResource {
           @RequestParam(required = false) String detail,
           @RequestParam(required = false) String origin,
           @RequestParam(required = false) String orderBy,
-          Pageable pageable) {
+          Pageable pageable) throws EnvironmentNotFoundException, LevelNotFoundException {
 
-	  return orderBy == null ?
-            logService.findByEnvironmentAndLevelOrDetailOrOrigin(environment, level, detail, origin, pageable) :
-		        logService.findByEnvironmentAndLevelOrDetailOrOriginOrderBy(environment, level, detail, origin, orderBy, pageable);
+    Environment environmentLocal = Environment.DEVELOPMENT;
+    try {
+      if (!StringUtils.isEmpty(environment))
+        environmentLocal = Environment.valueOf(environment.toUpperCase());
+    }catch(IllegalArgumentException e){
+      throw new EnvironmentNotFoundException();
+    }
+
+    Level levelLocal = Level.DEBUG;
+    try {
+      if (!StringUtils.isEmpty(level))
+        levelLocal = Level.valueOf(level.toUpperCase());
+    }catch(IllegalArgumentException e){
+      throw new LevelNotFoundException();
+    }
+
+    if(StringUtils.isEmpty(level) && StringUtils.isEmpty(detail) && StringUtils.isEmpty(origin)){
+      return logService.findByEnvironment(environmentLocal, pageable);
+    }else{
+
+      if (!StringUtils.isEmpty(level)){
+        if(StringUtils.isEmpty(orderBy)) return logService.findByEnvironmentAndDetail(environmentLocal, detail, pageable);
+
+        switch(orderBy){
+          case "level": return logService.findByEnvironmentAndLevelOrderByLevel(environmentLocal, levelLocal, pageable);
+          case "events": return logService.findByEnvironmentAndLevelOrderByEventOccurrences(environmentLocal, levelLocal, pageable);
+          default: return logService.findByEnvironmentAndLevel(environmentLocal, levelLocal, pageable);
+        }
+      }else if (!StringUtils.isEmpty(detail)){
+        if(StringUtils.isEmpty(orderBy)) return logService.findByEnvironmentAndDetail(environmentLocal, detail, pageable);
+
+        switch(orderBy){
+          case "level": return logService.findByEnvironmentAndDetailOrderByLevel(environmentLocal, detail, pageable);
+          case "events": return logService.findByEnvironmentAndDetailOrderByEventOccurrences(environmentLocal, detail, pageable);
+          default: return logService.findByEnvironmentAndDetail(environmentLocal, detail, pageable);
+        }
+      }else if (!StringUtils.isEmpty(origin)){
+        if(StringUtils.isEmpty(orderBy)) return logService.findByEnvironmentAndDetail(environmentLocal, detail, pageable);
+
+        switch(orderBy){
+          case "level": return logService.findByEnvironmentAndOriginOrderByLevel(environmentLocal, origin, pageable);
+          case "events": return logService.findByEnvironmentAndOriginOrderByEventOccurrences(environmentLocal, origin, pageable);
+          default: return logService.findByEnvironmentAndOrigin(environmentLocal, origin, pageable);
+        }
+      }
+
+    }
+    return logService.findByEnvironment(environmentLocal, pageable);
   }
 
 
   @PostMapping
-  public ResponseEntity<HttpEntity> create(@RequestBody List<Log> logs, HttpServletRequest req) throws EmptyRequestException {
+  public ResponseEntity<HttpEntity> create(@RequestBody LogDTO logDTO, HttpServletRequest req) throws EmptyRequestException, EnvironmentNotFoundException, LevelNotFoundException {
 
-    AtomicReference<Boolean> flag = new AtomicReference<>(false);
-    logs.forEach(log -> {
-      if(!log.isValid()) flag.set(true);
-    });
-
-    if(flag.get().equals(true)) throw new EmptyRequestException();
+    if(!logDTO.isValid()) throw new EmptyRequestException();
 
     Map<String, String> headers = new WebUtils().getHeadersInfo(req);
 
     String jwt = headers.getOrDefault("authorization", "NO TOKEN");
-
     if(!jwt.equals("NO TOKEN")) {jwt = jwt.substring(7);}
-
     Map<String, Object> jwtMap = new JWTParser().parseToken(jwt);
     String emailHeader = (String)jwtMap.getOrDefault("user_name", "NO EMAIL SET");
 
@@ -98,30 +158,59 @@ public class LogResource {
 
     String token = (String) jwtMap.getOrDefault("jti", "NO TOKEN SET");
 
-    logs.forEach(log -> {
-      log.setGeneratedBy(email.get());
-      log.setToken(token);
-      log.setCreatedAt(new Date());
-      log.setOrigin(req.getRemoteAddr());
-    });
+    Environment environment = Environment.DEVELOPMENT;
+    try {
+      if (!StringUtils.isEmpty(logDTO.getEnvironment()))
+        environment = Environment.valueOf(logDTO.getEnvironment().toUpperCase());
+      else
+        throw new EnvironmentNotFoundException();
+    }catch(IllegalArgumentException e){
+      throw new EnvironmentNotFoundException();
+    }
 
-    logService.save(logs);
+    Level level = Level.DEBUG;
+    try {
+      if (!StringUtils.isEmpty(logDTO.getLevel()))
+        level = Level.valueOf(logDTO.getLevel().toUpperCase());
+      else
+        throw new LevelNotFoundException();
+    }catch(IllegalArgumentException e){
+      throw new LevelNotFoundException();
+    }
 
-    return ResponseEntity.ok().build();
+    Log log = new Log(
+            logDTO.getTitle(),
+            level,
+            logDTO.getDetail(),
+            new Date(),
+            req.getRemoteAddr(),
+            token,
+            email.get(),
+            environment,
+            false);
+
+    Log logResult = logService.exists(log.getTitle(), log.getDetail(), log.getOrigin(), logDTO.getEnvironment(), logDTO.getLevel()).orElse(log);
+
+    logResult.addEvent(email.get(), new Date());
+    logService.save(logResult);
+
+    return ResponseEntity.status(201).build();
   }
 
   @PatchMapping("/store/{ids}")
   public ResponseEntity<HttpEntity> patchAll(@PathVariable List<Long> ids) throws EmptyRequestException {
-    List<Log> result = new ArrayList<>();
+    AtomicReference<Boolean> flag = new AtomicReference<>(false);
 
     for(Long id: ids){
       Optional<Log> tmp = logService.findById(id);
-      tmp.ifPresent(log -> {log.setStored(!log.getStored()); result.add(log);
+      tmp.ifPresent(log -> {
+        log.setStored(!log.getStored());
+        logService.save(log);
+        flag.set(true);
       });
     }
-      logService.save(result);
 
-    if (result.isEmpty()) throw new EmptyRequestException();
+    if (flag.get().equals(Boolean.FALSE)) throw new EmptyRequestException();
 
     return ResponseEntity.status(201).build();
   }

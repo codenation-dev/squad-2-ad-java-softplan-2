@@ -23,28 +23,6 @@ public class LogService {
     return logRepository.existsById(id);
   }
 
-  private Page<Log> countEvents(Page<Log> logs){
-    List<Log> tmp = new ArrayList<>();
-
-    logs.getContent().forEach(log -> {
-      if (!tmp.contains(log)){
-
-        Integer events = events(log);
-        log.setEvents(events);
-        tmp.add(log);
-
-      } else{
-        tmp.stream()
-                .filter(item -> item.equals(log))
-                .findAny()
-                .ifPresent(item ->
-                        log.setEvents(item.getEvents())
-                );
-      }
-    });
-
-    return logs;
-  }
 
   public Integer events (Log log){
     return logRepository.countByStoredAndTitleAndDetailAndOriginAndLevelAndEnvironment(
@@ -58,9 +36,7 @@ public class LogService {
   }
 
   public Page<Log> findAll(Pageable pageable) {
-    Page<Log> result = logRepository.findAllByStored(false, pageable);
-
-    return countEvents(result);
+    return logRepository.findAllByStored(false, pageable);
   }
 
   public Optional<Log> findById(Long id) {
@@ -68,67 +44,64 @@ public class LogService {
   }
 
   public Optional<Log> findByIdAndEnvironment(Long id, Environment environment) {
-    Optional<Log> result = logRepository.findByStoredAndIdAndEnvironment(false, id, environment);
-
-    result.ifPresent(item ->
-      item.setEvents(events(item))
-    );
-
-    return result;
+    return logRepository.findByStoredAndIdAndEnvironment(false, id, environment);
   }
 
   public void deleteById(Long aLong) {
     logRepository.deleteById(aLong);
   }
 
-  public void save(List<Log> objects) {
-    for(Log log: objects){
+  public void save(Log log) {
       logRepository.save(log);
-    }
   }
   
   public Page<Log> findByEnvironment(Environment environment, Pageable pageable) {
-		Page<Log> result =  logRepository.findByStoredAndEnvironment(false, environment, pageable);
+		return  logRepository.findByStoredAndEnvironment(false, environment, pageable);
 
-    return countEvents(result);
   }
   
-	public Page<Log> findByEnvironmentAndLevel(Environment environment, String level, Pageable pageable) {
-		Page<Log> result = logRepository.findByStoredAndEnvironmentAndLevel(false, environment, Enum.valueOf(Level.class,level.toUpperCase()), pageable);
-
-    return countEvents(result);
+	public Page<Log> findByEnvironmentAndLevel(Environment environment, Level level, Pageable pageable) {
+		return logRepository.findByStoredAndEnvironmentAndLevel(false, environment, level, pageable);
+  }
+  public Page<Log> findByEnvironmentAndLevelOrderByLevel(Environment environment, Level level, Pageable pageable) {
+    return logRepository.findByStoredAndEnvironmentAndLevelOrderByLevelAsc(false, environment, level, pageable);
+  }
+  public Page<Log> findByEnvironmentAndLevelOrderByEventOccurrences(Environment environment, Level level, Pageable pageable) {
+    return logRepository.findByStoredAndEnvironmentAndLevelOrderByEventOccurrencesAsc(false, environment, level, pageable);
   }
 
-public Page<Log> findByEnvironmentAndLevelOrDetailOrOrigin(String environment, String level, String detail,
-		String origin, Pageable pageable) {
-	return logRepository.findByStoredAndEnvironmentOrLevelOrDetailContainingIgnoreCaseOrOriginContaining(
-	        false,
-          Enum.valueOf(Environment.class, environment),
-          Enum.valueOf(Level.class,level.toUpperCase()),
-          detail,
-          origin,
-          pageable
-  );
-}
 
-public Page<Log> findByEnvironmentAndLevelOrDetailOrOriginOrderBy(String environment, String level, String detail,
-                                                                  String origin, String orderBy, Pageable pageable) {
-	return orderBy.equals("level") ? logRepository.findByStoredAndEnvironmentOrLevelIgnoreCaseOrDetailContainingIgnoreCaseOrOriginOrderByLevelAsc(
-	        false,
-          Enum.valueOf(Environment.class, environment),
-          Enum.valueOf(Level.class,level.toUpperCase()),
-          detail,
-          origin,
-          pageable
-  ):logRepository.findByStoredAndEnvironmentOrLevelOrDetailContainingIgnoreCaseOrOriginContainingOrderByEventsAsc(
-          false,
-          Enum.valueOf(Environment.class, environment),
-          Enum.valueOf(Level.class,level.toUpperCase()),
-          detail,
-          origin,
-          pageable
-  );
-	
-}
+  public Page<Log> findByEnvironmentAndDetail(Environment environment, String detail, Pageable pageable) {
+    return logRepository.findByStoredAndEnvironmentAndDetailContainingIgnoreCase(false, environment, detail, pageable);
+  }
+  public Page<Log> findByEnvironmentAndDetailOrderByLevel(Environment environment, String detail, Pageable pageable) {
+    return logRepository.findByStoredAndEnvironmentAndDetailContainingIgnoreCaseOrderByLevelAsc(false, environment, detail, pageable);
+  }
+  public Page<Log> findByEnvironmentAndDetailOrderByEventOccurrences(Environment environment, String detail, Pageable pageable) {
+    return logRepository.findByStoredAndEnvironmentAndDetailContainingIgnoreCaseOrderByEventOccurrencesAsc(false, environment, detail, pageable);
+  }
+
+  public Page<Log> findByEnvironmentAndOrigin(Environment environment, String origin, Pageable pageable) {
+    return logRepository.findByStoredAndEnvironmentAndOriginContaining(false, environment, origin, pageable);
+  }
+  public Page<Log> findByEnvironmentAndOriginOrderByLevel(Environment environment, String origin, Pageable pageable) {
+    return logRepository.findByStoredAndEnvironmentAndOriginContainingOrderByLevelAsc(false, environment, origin, pageable);
+  }
+  public Page<Log> findByEnvironmentAndOriginOrderByEventOccurrences(Environment environment, String origin, Pageable pageable) {
+    return logRepository.findByStoredAndEnvironmentAndOriginContainingOrderByEventOccurrencesAsc(false, environment, origin, pageable);
+  }
+
+
+  public Optional<Log> exists (String title, String detail, String origin, String environment, String level){
+    return logRepository.findByTitleAndDetailAndOriginAndEnvironmentAndLevel(
+            title,
+            detail,
+            origin,
+            Environment.valueOf(environment.toUpperCase()),
+            Level.valueOf(level.toUpperCase())
+            );
+  }
+
+
   
 }

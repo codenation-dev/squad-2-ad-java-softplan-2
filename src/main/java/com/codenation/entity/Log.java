@@ -2,6 +2,7 @@ package com.codenation.entity;
 
 import com.codenation.enums.Environment;
 import com.codenation.enums.Level;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -11,6 +12,7 @@ import org.springframework.util.StringUtils;
 
 import javax.persistence.*;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.Objects;
 
 @Entity
@@ -50,7 +52,23 @@ public class Log {
 	private Environment environment;
 
 	private Boolean stored = false;
-	private Integer events = 0;
+
+	private HashMap<Date, String> events;
+
+	private Integer eventOccurrences = 0;
+
+	public Log(String title, Level level, String detail, Date createdAt, String origin, String token, String generatedBy, Environment environment, Boolean stored) {
+		this.title = title;
+		this.level = level;
+		this.detail = detail;
+		this.createdAt = createdAt;
+		this.origin = origin;
+		this.token = token;
+		this.generatedBy = generatedBy;
+		this.environment = environment;
+		this.stored = stored;
+		this.events = new HashMap<>();
+	}
 
 	@Override
 	public boolean equals(Object obj) {
@@ -69,6 +87,11 @@ public class Log {
 						&& Objects.equals(level, other.level)
 						&& Objects.equals(origin, other.origin)
 						&& Objects.equals(title, other.title);
+	}
+
+	public void addEvent(String email, Date data){
+		events.put(data, email);
+		eventOccurrences++;
 	}
 
 	public int hashCode() {

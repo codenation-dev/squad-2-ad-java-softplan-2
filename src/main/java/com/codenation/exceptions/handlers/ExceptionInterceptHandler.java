@@ -79,6 +79,18 @@ public class ExceptionInterceptHandler extends ResponseEntityExceptionHandler {
     return new ResponseEntity<>(exception, HttpStatus.OK);
   }
 
+  @ExceptionHandler(EnvironmentNotFoundException.class)
+  public final ResponseEntity<ExceptionSchema> handleEnvironmentNotFoundExceptions(EnvironmentNotFoundException ex) {
+    ExceptionSchema exception = new ExceptionSchema(EnvironmentNotFoundException.getError(), EnvironmentNotFoundException.getErrorDescription());
+    return new ResponseEntity<>(exception, HttpStatus.BAD_REQUEST);
+  }
+
+  @ExceptionHandler(LevelNotFoundException.class)
+  public final ResponseEntity<ExceptionSchema> handleLevelNotFoundExceptions(LevelNotFoundException ex) {
+    ExceptionSchema exception = new ExceptionSchema(LevelNotFoundException.getError(), LevelNotFoundException.getErrorDescription());
+    return new ResponseEntity<>(exception, HttpStatus.BAD_REQUEST);
+  }
+
 
   @Override
   public final ResponseEntity handleMethodArgumentNotValid(MethodArgumentNotValidException ex, HttpHeaders headers, HttpStatus status, WebRequest request) {
