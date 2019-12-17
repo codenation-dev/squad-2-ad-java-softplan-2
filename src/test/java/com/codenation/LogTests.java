@@ -36,6 +36,8 @@ import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
 public class LogTests {
 
+    String token;
+
     @Autowired
     LogService logService;
 
@@ -71,7 +73,7 @@ public class LogTests {
         return objResponse.getAccess_token();
     }
 
-    String saveListofLogsInDB(List<Log> logList) throws IOException {
+    void saveListofLogsInDB(List<Log> logList) throws IOException {
 
         String token = getToken();
 
@@ -98,13 +100,25 @@ public class LogTests {
 
         httpResponse.close();
 
-        return token;
+        this.token = token;
     }
 
-    void cleanDB(List<GetResponse.LogDTO> logList) {
+    void cleanDB() throws IOException {
 
-        for (GetResponse.LogDTO log : logList)
+        List<Log> logList = logService.findAll(null).getContent();
+
+        for (Log log : logList)
             logService.deleteById(log.getId());
+
+        List<Log> remainingLogs = logService.findAll(null).getContent();
+
+//        System.out.println("");
+//        System.out.println("Iniciando remoção dos dados do DB");
+//        System.out.println("");
+//
+//        for (Log log : remainingLogs) {
+//            System.out.println(log.getId());
+//        }
 
     }
 
@@ -114,7 +128,9 @@ public class LogTests {
         List<Log> logList = new ArrayList<>();
         logList.add(LogsForTests.A());
 
-        String token = saveListofLogsInDB(logList);
+        saveListofLogsInDB(logList);
+
+        String token = this.token;
 
         CloseableHttpClient httpClient = HttpClients.createDefault();
         HttpGet getReq = new HttpGet("http://localhost:8080/api/v1/log");
@@ -145,9 +161,7 @@ public class LogTests {
         assertThat(log.getTitle()).isEqualTo(logList.get(0).getTitle());
 
 
-        cleanDB(
-                Arrays.asList(log)
-        );
+        cleanDB();
 
     }
 
@@ -166,7 +180,9 @@ public class LogTests {
         logList.add(LogsForTests.J());
         logList.add(LogsForTests.K());
 
-        String token = saveListofLogsInDB(logList);
+        saveListofLogsInDB(logList);
+
+        String token = this.token;
 
         CloseableHttpClient httpClient = HttpClients.createDefault();
         String environment = "DEVELOPMENT";
@@ -202,7 +218,9 @@ public class LogTests {
         logList.add(LogsForTests.B());
         logList.add(LogsForTests.C());
 
-        String token = saveListofLogsInDB(logList);
+        saveListofLogsInDB(logList);
+
+        String token = this.token;
 
         CloseableHttpClient httpClient = HttpClients.createDefault();
         HttpGet getReq = new HttpGet("http://localhost:8080/api/v1/log");
@@ -256,7 +274,7 @@ public class LogTests {
 
         assertThat(responseInGetResponse2.getContent().size()).isEqualTo(0);
 
-        cleanDB(patchedLogList);
+        cleanDB();
     }
 
 
