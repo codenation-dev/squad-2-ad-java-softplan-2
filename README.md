@@ -7,7 +7,7 @@
 
 Projeto Desenvolvido durante o programa de Aceleração Java da [Codenation](https://www.codenation.dev/) patrocionado pela [Softplan](https://www.softplan.com.br/). 
 
-Central de log, como o próprio nome diz centraliza os logs de uma ou mais aplicações. Facilita a manutenção e agiliza o processo de manutenção e correção de erros.
+Central de log, como o próprio nome diz, centraliza os logs de uma ou mais aplicações. Facilita o monitoramento e agiliza o processo de manutenção e correção de erros.
 
  [Clique Aqui](https://dashboard.heroku.com/apps) e veja a aplicação funcionando!
 
@@ -20,7 +20,7 @@ Central de log, como o próprio nome diz centraliza os logs de uma ou mais aplic
 * [Postman](https://www.getpostman.com/) - Plataforma de desenvolvimento de API
 * [Postgres](https://www.postgresql.org/) - Banco de dados
 * [Springboot](https://spring.io/projects/spring-boot) - Framework Java
-* [AssertJ](https://joel-costigliola.github.io/assertj/) - Framework de testess
+* [AssertJ](https://joel-costigliola.github.io/assertj/) - Framework de testes
 * [Swagger](https://swagger.io/) - Documentação automática
 
 
@@ -29,7 +29,7 @@ Central de log, como o próprio nome diz centraliza os logs de uma ou mais aplic
 
 ## Configuração Autenticação
 
-Confirguação básica de autenticação e requisição de dados:
+Configuração básica de autenticação e requisição de dados:
 
  Propertie    | Value          
 :----------------|:----------------
@@ -48,7 +48,7 @@ O formato de dados para usuário é:
 	"password": "password" }
 ```
 #### Log (Log)
-O formato de dados para usuário é:
+O formato de dados para log é:
 ```json
 {	"title": "Nome do erro",
 	"detail": "Detalhes do erro (Stack)",
@@ -59,43 +59,6 @@ O formato de dados para usuário é:
 	"generatedBy": "Quem o reportou",
 	"stored": "Armazenado" }
 ```
-## Recursos
-#### "/oauth/token"
-###### **POST**
-Requesita uma nova chave de acesso ao sevidor. Para isso, é necessáio ter um usuário registrado. Requer autenticação básica.
-
-#### "/swagger-ui"
-###### **GET**
-Mostra a documentação da API gerada automaticamente pelo Swagger
-
-#### "api/v1/user"
-###### **POST**
-Salva um novo usuário caso este seja válido.
-###### **GET**
-Mostra todos os usuários cadastrados.
-
-#### "api/v1/user/{id}"
-###### **GET**
-Mostra o detalhamento do usuário pelo ID.
-
-#### "api/v1/log"
-###### **POST**
-Salva um novo log.
-###### **GET**
-Retorna uma lista com todos o logs cadastrados
-
-#### "api/v1/log/{id}"
-###### **GET**
-Retorna o detalhamento do Log pelo ID.
-###### **PATCH**
-Arquiva o log juntamento com o parâmetro "strore".
-###### **DELETE**
-Apaga o registro do banco de dados.
-
-#### "api/v1/log?search="
-###### **GET**
-Realiza uma consulta a partir de uma query.
-
 
 
 ### Rodar Aplicação
@@ -108,6 +71,13 @@ mvn springboot:run
 
 
 
+### Deploy
+
+
+
+
+
+Para ver o passo a passo de como fazer o deploy com Heroku [Clique aqui](https://devcenter.heroku.com/categories/deployment).
 
 
 
@@ -123,9 +93,10 @@ mvn test
 
 ## Autores
 
-![Jean](https://avatars1.githubusercontent.com/u/50720434?s=40&v=4)Jean [@ghanizadev](https://github.com/ghanizadev)
-/ ![Igor](https://avatars0.githubusercontent.com/u/12281063?s=40&v=4) Igor [@igorcavalcantedb](https://github.com/igorcavalcantedb) / ![Jovani](https://avatars3.githubusercontent.com/u/49798215?s=40&v=4)Jovani [@JtMegazord](https://github.com/JtMegazord) / 
-![Eduardo](https://avatars0.githubusercontent.com/u/27643901?s=40&v=4) Eduardo [@spiandorello](https://github.com/spiandorello) /![Roberta](https://avatars0.githubusercontent.com/u/27643901?s=40&v=4) Roberta [@robertaavila](https://github.com/robertaavila) / ![Túlio](https://avatars0.githubusercontent.com/u/27643901?s=40&v=4)Túlio [@yandiro](https://github.com/yandiro)
+Jean [@ghanizadev](https://github.com/ghanizadev)
+/  Igor [@igorcacalcantedb](https://github.com/igorcavalcantedb) / Jovani [@JtMegazord](https://github.com/JtMegazord) 
+
+Eduardo [@spiandorello](https://github.com/spiandorello) / Roberta [@robertaavila](https://github.com/robertaavila) / Túlio [@yandiro](https://github.com/yandiro)
 
 
 
