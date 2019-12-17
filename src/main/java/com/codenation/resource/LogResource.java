@@ -45,11 +45,27 @@ public class LogResource {
   @GetMapping("/{environment}")
 	public Page<Log> findByEnvironment(@PathVariable String environment,
                                      @RequestParam(required = false) String level,
-                                     Pageable pageable) {
+                                     Pageable pageable) throws LevelNotFoundException, EnvironmentNotFoundException {
+    Environment environmentLocal = Environment.DEVELOPMENT;
+    try {
+      if (!StringUtils.isEmpty(environment))
+        environmentLocal = Environment.valueOf(environment.toUpperCase());
+    }catch(IllegalArgumentException e){
+      throw new EnvironmentNotFoundException();
+    }
+
+    Level levelLocal = Level.DEBUG;
+    try {
+      if (!StringUtils.isEmpty(level))
+        levelLocal = Level.valueOf(level.toUpperCase());
+    }catch(IllegalArgumentException e){
+      throw new LevelNotFoundException();
+    }
+
 		if(level != null) {
-			return logService.findByEnvironmentAndLevel(Enum.valueOf(Environment.class, environment.toUpperCase()), level, pageable);
+			return logService.findByEnvironmentAndLevel(environmentLocal, levelLocal, pageable);
 		}
-		return logService.findByEnvironment(Enum.valueOf(Environment.class, environment.toUpperCase()), pageable);
+		return logService.findByEnvironment(environmentLocal, pageable);
 	}
 
   @GetMapping("/{environment}/{id}")
@@ -68,17 +84,56 @@ public class LogResource {
           @RequestParam(required = false) String detail,
           @RequestParam(required = false) String origin,
           @RequestParam(required = false) String orderBy,
-          Pageable pageable) {
+          Pageable pageable) throws EnvironmentNotFoundException, LevelNotFoundException {
+
+    Environment environmentLocal = Environment.DEVELOPMENT;
+    try {
+      if (!StringUtils.isEmpty(environment))
+        environmentLocal = Environment.valueOf(environment.toUpperCase());
+    }catch(IllegalArgumentException e){
+      throw new EnvironmentNotFoundException();
+    }
+
+    Level levelLocal = Level.DEBUG;
+    try {
+      if (!StringUtils.isEmpty(level))
+        levelLocal = Level.valueOf(level.toUpperCase());
+    }catch(IllegalArgumentException e){
+      throw new LevelNotFoundException();
+    }
 
     if(StringUtils.isEmpty(level) && StringUtils.isEmpty(detail) && StringUtils.isEmpty(origin)){
-      return logService.findByEnvironment(Enum.valueOf(Environment.class,environment.toUpperCase()), pageable);
-    }else if (!StringUtils.isEmpty(level)){
-      if(StringUtils.isEmpty(orderBy)){
+      return logService.findByEnvironment(environmentLocal, pageable);
+    }else{
+
+      if (!StringUtils.isEmpty(level)){
+        if(StringUtils.isEmpty(orderBy)) return logService.findByEnvironmentAndDetail(environmentLocal, detail, pageable);
+
         switch(orderBy){
-          case "level": return null;
+          case "level": return logService.findByEnvironmentAndLevelOrderByLevel(environmentLocal, levelLocal, pageable);
+          case "events": return logService.findByEnvironmentAndLevelOrderByEventOccurrences(environmentLocal, levelLocal, pageable);
+          default: return logService.findByEnvironmentAndLevel(environmentLocal, levelLocal, pageable);
+        }
+      }else if (!StringUtils.isEmpty(detail)){
+        if(StringUtils.isEmpty(orderBy)) return logService.findByEnvironmentAndDetail(environmentLocal, detail, pageable);
+
+        switch(orderBy){
+          case "level": return logService.findByEnvironmentAndDetailOrderByLevel(environmentLocal, detail, pageable);
+          case "events": return logService.findByEnvironmentAndDetailOrderByEventOccurrences(environmentLocal, detail, pageable);
+          default: return logService.findByEnvironmentAndDetail(environmentLocal, detail, pageable);
+        }
+      }else if (!StringUtils.isEmpty(origin)){
+        if(StringUtils.isEmpty(orderBy)) return logService.findByEnvironmentAndDetail(environmentLocal, detail, pageable);
+
+        switch(orderBy){
+          case "level": return logService.findByEnvironmentAndOriginOrderByLevel(environmentLocal, origin, pageable);
+          case "events": return logService.findByEnvironmentAndOriginOrderByEventOccurrences(environmentLocal, origin, pageable);
+          default: return logService.findByEnvironmentAndOrigin(environmentLocal, origin, pageable);
         }
       }
+
     }
+    return logService.findByEnvironment(environmentLocal, pageable);
   }
 
 
@@ -134,7 +189,6 @@ public class LogResource {
             environment,
             false);
 
-    System.out.println(logService.exists(log.getTitle(), log.getDetail(), log.getOrigin(), logDTO.getEnvironment(), logDTO.getLevel()).isPresent());
     Log logResult = logService.exists(log.getTitle(), log.getDetail(), log.getOrigin(), logDTO.getEnvironment(), logDTO.getLevel()).orElse(log);
 
     logResult.addEvent(email.get(), new Date());

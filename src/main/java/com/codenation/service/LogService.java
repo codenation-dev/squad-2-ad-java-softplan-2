@@ -60,14 +60,14 @@ public class LogService {
 
   }
   
-	public Page<Log> findByEnvironmentAndLevel(Environment environment, String level, Pageable pageable) {
-		return logRepository.findByStoredAndEnvironmentAndLevel(false, environment, Enum.valueOf(Level.class,level.toUpperCase()), pageable);
+	public Page<Log> findByEnvironmentAndLevel(Environment environment, Level level, Pageable pageable) {
+		return logRepository.findByStoredAndEnvironmentAndLevel(false, environment, level, pageable);
   }
-  public Page<Log> findByEnvironmentAndLevelOrderByLevel(Environment environment, String level, Pageable pageable) {
-    return logRepository.findByStoredAndEnvironmentAndLevelOrderByLevelAsc(false, environment, Enum.valueOf(Level.class,level.toUpperCase()), pageable);
+  public Page<Log> findByEnvironmentAndLevelOrderByLevel(Environment environment, Level level, Pageable pageable) {
+    return logRepository.findByStoredAndEnvironmentAndLevelOrderByLevelAsc(false, environment, level, pageable);
   }
-  public Page<Log> findByEnvironmentAndLevelOrderByEventOccurrences(Environment environment, String level, Pageable pageable) {
-    return logRepository.findByStoredAndEnvironmentAndLevelOrderByEventOccurrencesAsc(false, environment, Enum.valueOf(Level.class,level.toUpperCase()), pageable);
+  public Page<Log> findByEnvironmentAndLevelOrderByEventOccurrences(Environment environment, Level level, Pageable pageable) {
+    return logRepository.findByStoredAndEnvironmentAndLevelOrderByEventOccurrencesAsc(false, environment, level, pageable);
   }
 
 
@@ -90,8 +90,6 @@ public class LogService {
   public Page<Log> findByEnvironmentAndOriginOrderByEventOccurrences(Environment environment, String origin, Pageable pageable) {
     return logRepository.findByStoredAndEnvironmentAndOriginContainingOrderByEventOccurrencesAsc(false, environment, origin, pageable);
   }
-
-
 
 
   public Optional<Log> exists (String title, String detail, String origin, String environment, String level){

@@ -55,6 +55,8 @@ public class Log {
 
 	private HashMap<Date, String> events;
 
+	private Integer eventOccurrences = 0;
+
 	public Log(String title, Level level, String detail, Date createdAt, String origin, String token, String generatedBy, Environment environment, Boolean stored) {
 		this.title = title;
 		this.level = level;
@@ -89,10 +91,7 @@ public class Log {
 
 	public void addEvent(String email, Date data){
 		events.put(data, email);
-	}
-
-	public Integer getEventOccurrences(){
-		return events.size();
+		eventOccurrences++;
 	}
 
 	public int hashCode() {
