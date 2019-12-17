@@ -2,6 +2,7 @@ package com.codenation.service;
 
 import com.codenation.entity.Log;
 import com.codenation.enums.Environment;
+import com.codenation.enums.Level;
 import com.codenation.repository.LogRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -93,7 +94,7 @@ public class LogService {
   }
   
 	public Page<Log> findByEnvironmentAndLevel(Environment environment, String level, Pageable pageable) {
-		Page<Log> result = logRepository.findByStoredAndEnvironmentAndLevel(false, environment, level, pageable);
+		Page<Log> result = logRepository.findByStoredAndEnvironmentAndLevel(false, environment, Enum.valueOf(Level.class,level.toUpperCase()), pageable);
 
     return countEvents(result);
   }
@@ -103,7 +104,7 @@ public Page<Log> findByEnvironmentAndLevelOrDetailOrOrigin(String environment, S
 	return logRepository.findByStoredAndEnvironmentOrLevelOrDetailContainingIgnoreCaseOrOriginContaining(
 	        false,
           Enum.valueOf(Environment.class, environment),
-          level,
+          Enum.valueOf(Level.class,level.toUpperCase()),
           detail,
           origin,
           pageable
@@ -111,18 +112,18 @@ public Page<Log> findByEnvironmentAndLevelOrDetailOrOrigin(String environment, S
 }
 
 public Page<Log> findByEnvironmentAndLevelOrDetailOrOriginOrderBy(String environment, String level, String detail,
-		String origin, String orderBy, Pageable pageable) {
+                                                                  String origin, String orderBy, Pageable pageable) {
 	return orderBy.equals("level") ? logRepository.findByStoredAndEnvironmentOrLevelIgnoreCaseOrDetailContainingIgnoreCaseOrOriginOrderByLevelAsc(
 	        false,
           Enum.valueOf(Environment.class, environment),
-          level,
+          Enum.valueOf(Level.class,level.toUpperCase()),
           detail,
           origin,
           pageable
   ):logRepository.findByStoredAndEnvironmentOrLevelOrDetailContainingIgnoreCaseOrOriginContainingOrderByEventsAsc(
           false,
           Enum.valueOf(Environment.class, environment),
-          level,
+          Enum.valueOf(Level.class,level.toUpperCase()),
           detail,
           origin,
           pageable
