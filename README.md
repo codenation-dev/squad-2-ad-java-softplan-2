@@ -94,7 +94,7 @@ mvn test
 ## Autores
 
 Jean [@ghanizadev](https://github.com/ghanizadev)
-/  Igor [@igorcacalcantedb](https://github.com/igorcavalcantedb) / Jovani [@JtMegazord](https://github.com/JtMegazord) 
+/  Igor [@igorcavalcantedb](https://github.com/igorcavalcantedb) / Jovani [@JtMegazord](https://github.com/JtMegazord) 
 
 Eduardo [@spiandorello](https://github.com/spiandorello) / Roberta [@robertaavila](https://github.com/robertaavila) / Túlio [@yandiro](https://github.com/yandiro)
 
